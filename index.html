@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALL CAPS — MLTP All-History Draft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef2f7;
+    --panel:#ffffff;
+    --panel-2:#f3f6fb;
+    --panel-3:#eaf2ff;
+    --line:#dde4ee;
+    --navy:#15233a;
+    --navy-2:#1c2f4d;
+    --ink:#1c2a3f;
+    --muted:#6f7e96;
+    --cap-blue:#2563eb;
+    --cap-blue-dark:#1d4ed8;
+    --tag-red:#dc3530;
+    --tag-red-dark:#b8281f;
+    --flag-gold:#d97706;
+    --gate-green:#178a4a;
+    --gate-green-dark:#11733c;
+
+    --display: 'Nunito', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'Inter', sans-serif;
+
+    --radius: 10px;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+
+  body{
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 12% -10%, rgba(37,99,235,0.07), transparent 45%),
+      radial-gradient(circle at 88% 0%, rgba(220,53,48,0.05), transparent 40%);
+    color: var(--ink);
+    font-family: var(--body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Site bar ---------- */
+  .sitebar{
+    background: var(--navy-2);
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sitebar-inner{
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .03em;
+  }
+  .sitebar-ball{
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    flex: none;
+    background: linear-gradient(90deg, var(--cap-blue) 50%, var(--tag-red) 50%);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.22);
+  }
+  .sitebar-name{ text-transform: uppercase; }
+  .sitebar-sep{ opacity:.35; }
+  .sitebar-page{ opacity:.7; font-weight: 500; }
+
+  .page{
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 28px 20px 64px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding: 36px 0 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .eyebrow{
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cap-blue-dark);
+    margin: 0 0 10px;
+  }
+  .hero h1{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(56px, 12vw, 108px);
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    margin: 0;
+    background: linear-gradient(120deg, var(--ink) 30%, var(--cap-blue) 70%, var(--tag-red) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .tagline{
+    max-width: 640px;
+    font-size: 17px;
+    color: var(--muted);
+    margin: 14px 0 22px;
+  }
+  .tagline strong{ color: var(--flag-gold); }
+
+  .chip-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .chip{
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--navy);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 7px 14px;
+    box-shadow: 0 1px 2px rgba(21,35,58,0.04);
+  }
+
+  /* ---------- Board ---------- */
+  .board{ margin-bottom: 28px; }
+  .board-label{
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 10px;
+  }
+  .board-track{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 760px){
+    .board-track{
+      grid-template-columns: repeat(5, 200px);
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scroll-snap-type: x mandatory;
+    }
+    .board-track .slot-card{ scroll-snap-align: start; }
+  }
+
+  .slot-card{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+    min-height: 128px;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1px 2px rgba(21,35,58,0.04);
+    transition: border-color .25s, background .25s, transform .2s, box-shadow .25s;
+  }
+  .slot-card .slot-num{
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: .08em;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+  .slot-card .slot-round{
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-top: 4px;
+    color: var(--navy);
+  }
+  .slot-card .slot-pick{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .slot-card .slot-pick .name{
+    display:block;
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .slot-card.is-active{
+    border-color: var(--cap-blue);
+    background: linear-gradient(160deg, var(--panel-3), var(--panel));
+    box-shadow: 0 4px 14px rgba(37,99,235,0.12);
+    transform: translateY(-2px);
+  }
+  .slot-card.is-active .slot-num{ color: var(--cap-blue-dark); }
+  .slot-card.is-done{ border-color: var(--gate-green); }
+  .slot-card.is-pending{ opacity: .6; }
+
+  .pos-tag{
+    display:inline-flex;
+    align-items:center;
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 2px 7px;
+    border: 1px solid currentColor;
+  }
+  .pos-tag.off{ color: var(--cap-blue-dark); }
+  .pos-tag.def{ color: var(--tag-red-dark); }
+  .pos-tag.flex{ color: var(--flag-gold); }
+  .pos-tag.both{ color: var(--gate-green-dark); }
+  .pos-tag.full{ color: var(--muted); }
+
+  /* ---------- Draft panel ---------- */
+  .draft-panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(21,35,58,0.05);
+  }
+  .panel-head{ margin-bottom: 18px; }
+  .panel-head .round-label{
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cap-blue-dark);
+    margin: 0 0 6px;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+  }
+  .panel-head h2{
+    font-family: var(--display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(28px, 5vw, 40px);
+    margin: 0;
+    letter-spacing: 0.01em;
+    color: var(--navy);
+  }
+  .panel-head .panel-sub{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin: 4px 0 0;
+  }
+
+  /* slot machine: two reels */
+  .slot-machine{
+    margin: 18px 0 20px;
+    display:flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .reel{ flex: 1 1 220px; min-width: 0; }
+  .reel-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+  .reel-label .locked{
+    color: var(--gate-green);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--gate-green);
+    border-radius: 999px;
+    padding: 1px 6px;
+  }
+  .slot-window{
+    height: 88px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--panel-2);
+  }
+  .slot-window::before, .slot-window::after{
+    content:"";
+    position:absolute;
+    left:0; right:0;
+    height: 22px;
+    pointer-events:none;
+    z-index: 2;
+  }
+  .slot-window::before{ top:0; background: linear-gradient(to bottom, var(--panel-2), transparent); }
+  .slot-window::after{ bottom:0; background: linear-gradient(to top, var(--panel-2), transparent); }
+  .slot-window .frame{
+    position:absolute; inset:0;
+    border-top: 2px solid var(--cap-blue);
+    border-bottom: 2px solid var(--cap-blue);
+    pointer-events:none;
+    z-index: 3;
+  }
+  .slot-track{
+    display:flex;
+    flex-direction: column;
+    will-change: transform;
+  }
+  .slot-plate{
+    height: 88px;
+    flex: 0 0 88px;
+    display:flex;
+  }
+  .season-plate{
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 4px;
+  }
+  .season-plate .season-num{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--cap-blue);
+  }
+  .season-plate .season-league{
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .12em;
+    color: var(--muted);
+  }
+  .team-plate{
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    padding: 0 18px;
+    gap: 4px;
+  }
+  .team-plate .team-name{
+    font-family: var(--display);
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(18px, 3.4vw, 24px);
+    line-height: 1.05;
+    color: var(--navy);
+  }
+  .team-plate .team-record{
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* player grid */
+  .player-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 640px){ .player-grid{ grid-template-columns: 1fr; } }
+
+  .player-card{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px;
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color .15s, transform .15s, opacity .15s, box-shadow .15s;
+  }
+  .player-card:hover{ border-color: var(--cap-blue); transform: translateY(-2px); box-shadow: 0 4px 14px rgba(37,99,235,0.10); }
+  .player-card.ineligible{
+    opacity: .45;
+  }
+  .player-card.ineligible:hover{ border-color: var(--line); transform: none; box-shadow: none; }
+  .pname-row{
+    display:flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .pname-right{
+    display:flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+    flex: none;
+  }
+  .pname-right .pmin{
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .player-card .pname{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 22px;
+    text-transform: uppercase;
+    line-height: 1;
+    color: var(--navy);
+  }
+  .player-card .pname.drafted-out{
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .player-card .pteam{
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .stat-line{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+  }
+  .stat-line div{ display:flex; justify-content: space-between; border-bottom: 1px dashed var(--line); padding-bottom: 3px; }
+  .stat-line span{ color: var(--muted); }
+  .stat-line b{ color: var(--ink); font-weight: 700; }
+  .stat-line .tscar b{ color: var(--gate-green-dark); }
+  .stat-line .tscar.neg b{ color: var(--tag-red-dark); }
+
+  .btn{
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--navy);
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s, color .15s, opacity .15s;
+  }
+  .btn:disabled{ opacity: .4; cursor: not-allowed; }
+  .btn.primary{
+    background: var(--gate-green);
+    color: #ffffff;
+    border-color: var(--gate-green);
+    font-weight: 700;
+  }
+  .btn.primary:hover:not(:disabled){ background: var(--gate-green-dark); border-color: var(--gate-green-dark); }
+  .btn.ghost:hover:not(:disabled){ border-color: var(--cap-blue); color: var(--cap-blue-dark); }
+  .btn.draft{
+    align-self: stretch;
+    text-align:center;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: var(--cap-blue);
+    color: #ffffff;
+    border-color: var(--cap-blue);
+  }
+  .btn.draft:hover:not(:disabled){ background: var(--cap-blue-dark); border-color: var(--cap-blue-dark); }
+
+  .draft-choice{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .draft-choice .btn.draft{ flex: 1 1 80px; }
+
+  .skip-row{ display:flex; gap: 10px; flex-wrap: wrap; }
+  .badge{
+    display:inline-flex;
+    align-items:center; justify-content:center;
+    min-width: 18px; height: 18px;
+    border-radius: 999px;
+    background: rgba(37,99,235,0.10);
+    color: var(--cap-blue-dark);
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 6px;
+    padding: 0 5px;
+  }
+
+  /* ---------- Results ---------- */
+  .results{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    text-align:center;
+    box-shadow: 0 1px 3px rgba(21,35,58,0.05);
+  }
+  .results h2{
+    font-family: var(--display);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: clamp(26px, 5vw, 38px);
+    margin: 0 0 6px;
+    color: var(--navy);
+  }
+  .results .ratingline{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+  .ratingline b{ color: var(--cap-blue-dark); }
+
+  .ticker{
+    display:grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    max-width: 480px;
+    margin: 0 auto 26px;
+  }
+  .ticker .g{
+    aspect-ratio: 1;
+    border-radius: 4px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    transition: background .15s, border-color .15s, transform .15s;
+  }
+  .ticker .g.win{ background: var(--gate-green); border-color: var(--gate-green); }
+  .ticker .g.loss{ background: var(--tag-red); border-color: var(--tag-red); }
+
+  .final-record{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(64px, 16vw, 140px);
+    line-height: 0.9;
+    margin: 6px 0;
+    color: var(--navy);
+  }
+  .final-record.perfect{
+    background: linear-gradient(120deg, var(--flag-gold), var(--gate-green));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .flavor{
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto 26px;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer{
+    margin-top: 36px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .footer a{ color: var(--cap-blue-dark); text-decoration: none; }
+  .footer a:hover{ text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce){
+    .slot-track{ transition: none !important; }
+    .player-card, .slot-card, .ticker .g{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="sitebar">
+  <div class="sitebar-inner">
+    <span class="sitebar-ball" aria-hidden="true"></span>
+    <span class="sitebar-name">TagPro League</span>
+    <span class="sitebar-sep">/</span>
+    <span class="sitebar-page">All-History Draft</span>
+  </div>
+</div>
+<main class="page">
+
+  <header class="hero">
+    <p class="eyebrow">MLTP · All-History Draft</p>
+    <h1>ALL CAPS</h1>
+    <p class="tagline">
+      Spin for an MLTP season and franchise, then draft the standout from that roster
+      &mdash; <span class="pos-tag off">OFF</span> and <span class="pos-tag def">DEF</span>
+      players are split by who actually produces more on offense (OSCAR) vs. defense
+      (DSCAR), while a <span class="pos-tag both">BOTH</span> tag marks two-way players
+      whose OSCAR and DSCAR are nearly even \u2014 they can slot into either side. Every
+      pick lands itself onto your team: 2 Offense, 2 Defense, and 1 5th Ball that can hold
+      anyone. Once all five are in, run a 30-game season and see if it goes
+      <strong>30&ndash;0</strong>.
+    </p>
+    <div class="chip-row">
+      <span class="chip">2 OFF · 2 DEF · 1 5TH BALL</span>
+      <span class="chip">2 reroll franchise</span>
+      <span class="chip">2 reroll season</span>
+      <span class="chip">137 team-seasons · 30 MLTP seasons</span>
+      <span class="chip">30-game season sim</span>
+    </div>
+  </header>
+
+  <section class="draft-panel" id="draftPanel"></section>
+
+  <section class="board" aria-label="Your roster">
+    <p class="board-label">Your roster</p>
+    <div class="board-track" id="boardTrack"></div>
+  </section>
+
+  <section class="results" id="results" hidden></section>
+
+  <footer class="footer">
+    <p>
+      Every roster spot reproduces a real season line from
+      <a href="https://tagpro-reference.com" target="_blank" rel="noopener">TagPro Reference</a>
+      (Caps, Hold, Prevent, Returns, OSCAR, DSCAR, TSCAR), spanning 29 MLTP seasons
+      (S10&ndash;S14, S25, S33, S35&ndash;S39, and more) across 58 franchises.
+      Holdin' Gate Warriors leads the pool with 11 seasons, followed by The Land
+      Before Timers (8), The Holy Seehawks (7), Centra of Attention (6), and Boostin
+      Dynamo (5). A player is tagged <strong>Offense</strong> when their OSCAR is
+      higher than their DSCAR for that season, <strong>Defense</strong> when DSCAR is
+      higher, and <strong>Both</strong> when the gap is under 5 points &mdash; a rough
+      cut that can change as the data grows. ALL CAPS is an independent fan project,
+      not affiliated with or endorsed by TagPro League or TagPro Reference.
+    </p>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+
+  // ---------------------------------------------------------------
+  // DATA — real season lines pulled from tagpro-reference.com
+  // Stat fields: caps, hold, prevent, returns, oscar, dscar, tscar
+  // ---------------------------------------------------------------
+  const POOL = [
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Angry Balls", record: "10-0-0-7",
+      players: [
+        { name:"BigBird", min:440, caps:6, hold:1356, prevent:5403, returns:519, oscar:-16.9, dscar:41.6, tscar:24.7 },
+        { name:"dywz", min:410, caps:50, hold:4342, prevent:808, returns:210, oscar:29.5, dscar:-18.1, tscar:11.4 },
+        { name:"Sundown", min:399, caps:11, hold:1821, prevent:4363, returns:448, oscar:-7.7, dscar:31.6, tscar:23.9 },
+        { name:"Altiger", min:360, caps:36, hold:4129, prevent:726, returns:255, oscar:33.3, dscar:0.6, tscar:33.8 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Ball€himedes", record: "6-0-0-11",
+      players: [
+        { name:"Death Pickle", min:400, caps:7, hold:1494, prevent:4703, returns:537, oscar:-14.6, dscar:41.9, tscar:27.2 },
+        { name:"np", min:360, caps:37, hold:4591, prevent:584, returns:195, oscar:34.9, dscar:-11.9, tscar:23 },
+        { name:"Mr.Gone", min:400, caps:13, hold:1616, prevent:4029, returns:504, oscar:-10.3, dscar:30.2, tscar:19.9 },
+        { name:"Vials", min:400, caps:41, hold:4520, prevent:506, returns:190, oscar:30.7, dscar:-15.9, tscar:14.7 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Baltesers", record: "11-0-0-9",
+      players: [
+        { name:"YoungSinatra", min:460, caps:9, hold:936, prevent:7737, returns:644, oscar:-17.2, dscar:53.6, tscar:36.4 },
+        { name:"Arbybear", min:460, caps:13, hold:1650, prevent:6321, returns:597, oscar:-9.9, dscar:46.5, tscar:36.6 },
+        { name:"toasty.", min:420, caps:53, hold:5287, prevent:429, returns:164, oscar:41.8, dscar:-22.7, tscar:19.1 },
+        { name:"i'm high", min:375, caps:59, hold:4409, prevent:550, returns:222, oscar:39.5, dscar:-12.4, tscar:27.2 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "10-0-0-8",
+      players: [
+        { name:"intercest", min:360, caps:33, hold:3733, prevent:741, returns:308, oscar:22.3, dscar:4.8, tscar:27.1 },
+        { name:"C Bivvey", min:358, caps:10, hold:1155, prevent:4519, returns:447, oscar:-10.2, dscar:32.7, tscar:22.4 },
+        { name:"jjpoole", min:358, caps:12, hold:1926, prevent:2741, returns:354, oscar:0.1, dscar:19.8, tscar:20 },
+        { name:"owen", min:360, caps:34, hold:4268, prevent:519, returns:144, oscar:28.2, dscar:-20.5, tscar:7.7 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Capper's Delight", record: "5-0-0-13",
+      players: [
+        { name:"BALLDON'TLIE", min:400, caps:38, hold:4589, prevent:653, returns:202, oscar:29.4, dscar:-12.8, tscar:16.6 },
+        { name:"donuts42", min:390, caps:8, hold:1529, prevent:3904, returns:598, oscar:-11.2, dscar:50.5, tscar:39.3 },
+        { name:"wanker -->", min:180, caps:15, hold:2067, prevent:231, returns:95, oscar:12.9, dscar:-6.4, tscar:6.6 },
+        { name:"Some Paul", min:200, caps:16, hold:2128, prevent:293, returns:98, oscar:12, dscar:-6.7, tscar:5.3 },
+        { name:"Gem", min:160, caps:4, hold:692, prevent:964, returns:138, oscar:-2.6, dscar:4.1, tscar:1.5 },
+        { name:"DudeMcGuy", min:160, caps:5, hold:684, prevent:1708, returns:191, oscar:-4, dscar:13.8, tscar:9.8 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Chase Jam", record: "13-0-0-5",
+      players: [
+        { name:"Ball God", min:500, caps:83, hold:6702, prevent:863, returns:263, oscar:61.9, dscar:-22.5, tscar:39.4 },
+        { name:"sIide", min:387, caps:6, hold:1025, prevent:4561, returns:611, oscar:-15.9, dscar:50.9, tscar:35 },
+        { name:"Ty", min:500, caps:58, hold:5823, prevent:1304, returns:306, oscar:40.1, dscar:-8.7, tscar:31.4 },
+        { name:"dodsfall", min:500, caps:17, hold:2573, prevent:5043, returns:564, oscar:-9, dscar:36.7, tscar:27.7 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Ghostboosters", record: "2-0-0-18",
+      players: [
+        { name:"FLYMOLO", min:360, caps:4, hold:1811, prevent:2860, returns:388, oscar:-8.8, dscar:19.3, tscar:10.5 },
+        { name:"WowSuchPro", min:270, caps:24, hold:2929, prevent:598, returns:179, oscar:19.3, dscar:-10.7, tscar:8.5 },
+        { name:"Dodge", min:250, caps:4, hold:1048, prevent:1959, returns:271, oscar:-6.7, dscar:17.3, tscar:10.7 },
+        { name:"wanker -->", min:190, caps:19, hold:2078, prevent:372, returns:124, oscar:13.3, dscar:-5.9, tscar:7.4 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "12-0-0-7",
+      players: [
+        { name:"Stojakovic", min:500, caps:94, hold:7205, prevent:777, returns:247, oscar:75.4, dscar:-17.8, tscar:57.6 },
+        { name:"Iblis", min:473, caps:16, hold:1290, prevent:7569, returns:729, oscar:-19, dscar:56.2, tscar:37.2 },
+        { name:"Crippy", min:345, caps:23, hold:1719, prevent:5064, returns:420, oscar:-2.7, dscar:25.7, tscar:22.9 },
+        { name:"bad", min:553, caps:55, hold:5317, prevent:1658, returns:337, oscar:30.4, dscar:-9.1, tscar:21.2 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Holy Rollers", record: "16-0-0-4",
+      players: [
+        { name:"Abe Lincoln", min:513, caps:21, hold:1839, prevent:6116, returns:801, oscar:-6.5, dscar:76.6, tscar:70.2 },
+        { name:"Legman", min:553, caps:83, hold:5641, prevent:899, returns:337, oscar:43.4, dscar:-9.5, tscar:33.9 },
+        { name:"Syniikal", min:553, caps:5, hold:918, prevent:7387, returns:694, oscar:-30.5, dscar:60.9, tscar:30.4 },
+        { name:"ProTag", min:533, caps:88, hold:7074, prevent:558, returns:215, oscar:65.1, dscar:-34.8, tscar:30.2 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Los Santos Pings", record: "7-0-0-12",
+      players: [
+        { name:"Bal McCartny", min:400, caps:10, hold:1042, prevent:5105, returns:562, oscar:-14.2, dscar:44.1, tscar:29.9 },
+        { name:"Fronj", min:360, caps:42, hold:4048, prevent:746, returns:215, oscar:31.7, dscar:-10.5, tscar:21.2 },
+        { name:"MiIky", min:400, caps:35, hold:5892, prevent:325, returns:163, oscar:44, dscar:-23.7, tscar:20.4 },
+        { name:"SuperSans", min:400, caps:10, hold:1448, prevent:4227, returns:408, oscar:-12.8, dscar:22.5, tscar:9.7 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "MEME*TEAM", record: "16-0-0-1",
+      players: [
+        { name:"LEBRON*JAMES", min:500, caps:117, hold:6902, prevent:728, returns:237, oscar:80, dscar:-22.6, tscar:57.4 },
+        { name:"GriefSeeds", min:500, caps:15, hold:975, prevent:7346, returns:1086, oscar:-21.1, dscar:99, tscar:77.9 },
+        { name:"Mr.Glass", min:500, caps:15, hold:1678, prevent:5887, returns:481, oscar:-15.1, dscar:27.6, tscar:12.4 },
+        { name:"BAllstar", min:220, caps:30, hold:2545, prevent:217, returns:77, oscar:17.7, dscar:-11.4, tscar:6.3 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Origin Ducks", record: "11-0-0-8",
+      players: [
+        { name:"iAaronK", min:250, caps:5, hold:910, prevent:3275, returns:370, oscar:-5.6, dscar:30, tscar:24.4 },
+        { name:"okthen", min:414, caps:48, hold:4458, prevent:971, returns:241, oscar:32.2, dscar:-8.9, tscar:23.3 },
+        { name:"Eashy", min:200, caps:4, hold:408, prevent:3324, returns:252, oscar:-7.8, dscar:21.8, tscar:14 },
+        { name:"swerve", min:200, caps:29, hold:2614, prevent:259, returns:80, oscar:23.6, dscar:-10.3, tscar:13.2 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "ProBots", record: "7-0-0-12",
+      players: [
+        { name:"Turbo", min:400, caps:6, hold:645, prevent:5472, returns:594, oscar:-22.1, dscar:49.2, tscar:27.2 },
+        { name:"Mr. Hat", min:400, caps:40, hold:5249, prevent:487, returns:181, oscar:42.9, dscar:-20.6, tscar:22.3 },
+        { name:"SIDE", min:400, caps:4, hold:896, prevent:4969, returns:524, oscar:-19.8, dscar:40.1, tscar:20.2 },
+        { name:"danisk", min:400, caps:45, hold:4822, prevent:379, returns:171, oscar:33.6, dscar:-20.9, tscar:12.8 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Pup 'N Suds", record: "2-0-0-15",
+      players: [
+        { name:"lukemoo", min:360, caps:9, hold:1056, prevent:3318, returns:458, oscar:-9.6, dscar:34.5, tscar:25 },
+        { name:"Stann", min:370, caps:6, hold:1728, prevent:3985, returns:410, oscar:-7.4, dscar:23.8, tscar:16.5 },
+        { name:"Have mad", min:300, caps:27, hold:3141, prevent:392, returns:198, oscar:18.7, dscar:-6.1, tscar:12.6 },
+        { name:"Romulus", min:140, caps:8, hold:1633, prevent:247, returns:77, oscar:7.6, dscar:-6.8, tscar:0.7 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Tears for Spheres", record: "7-0-0-11",
+      players: [
+        { name:"Mufro", min:205, caps:32, hold:2154, prevent:532, returns:136, oscar:15.8, dscar:-1, tscar:14.7 },
+        { name:"Prizm", min:240, caps:8, hold:1628, prevent:2061, returns:233, oscar:2, dscar:12.1, tscar:14.1 },
+        { name:"timeboy", min:369, caps:16, hold:3230, prevent:2055, returns:286, oscar:9.8, dscar:1.5, tscar:11.3 },
+        { name:"CB13", min:120, caps:2, hold:344, prevent:1797, returns:181, oscar:-4.7, dscar:15.8, tscar:11.2 }
+      ]
+    },
+    {
+      season: "S10", league: "MLTP",
+      franchise: "Texas Hold'em", record: "13-0-0-7",
+      players: [
+        { name:"ooo killem", min:380, caps:34, hold:4580, prevent:660, returns:220, oscar:33, dscar:-9.6, tscar:23.4 },
+        { name:"Dalek", min:374, caps:17, hold:1765, prevent:4358, returns:469, oscar:-4.1, dscar:35.6, tscar:31.5 },
+        { name:"yank", min:345, caps:16, hold:1424, prevent:3619, returns:368, oscar:-5.8, dscar:24.7, tscar:18.9 },
+        { name:"Wanye", min:240, caps:24, hold:2690, prevent:496, returns:142, oscar:18.1, dscar:-3.1, tscar:15.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Balls on Parade", record: "10-0-0-2",
+      players: [
+        { name:"Bal McCartny", min:400, caps:20, hold:1185, prevent:6626, returns:674, oscar:-12.1, dscar:51.9, tscar:39.8 },
+        { name:"toasty.", min:380, caps:90, hold:5506, prevent:733, returns:220, oscar:55, dscar:-17.4, tscar:37.6 },
+        { name:"meaL", min:400, caps:91, hold:4686, prevent:986, returns:231, oscar:50.6, dscar:-17.9, tscar:32.7 },
+        { name:"siDe", min:400, caps:16, hold:1002, prevent:6179, returns:540, oscar:-15.3, dscar:35.4, tscar:20.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Boats 'n' Holds", record: "2-0-0-12",
+      players: [
+        { name:"Mr. Hat", min:200, caps:22, hold:2947, prevent:396, returns:133, oscar:20.3, dscar:-6.7, tscar:13.6 },
+        { name:"Syniikal", min:240, caps:0, hold:122, prevent:3121, returns:360, oscar:-19.6, dscar:30.5, tscar:10.8 },
+        { name:"BAN NAN", min:140, caps:11, hold:2037, prevent:149, returns:71, oscar:12.2, dscar:-8, tscar:4.2 },
+        { name:"Arbybear", min:280, caps:8, hold:1105, prevent:3476, returns:352, oscar:-12.1, dscar:14.3, tscar:2.2 },
+        { name:"Gman8181", min:89, caps:10, hold:876, prevent:124, returns:28, oscar:3.2, dscar:-8.1, tscar:-4.9 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "9-0-0-4",
+      players: [
+        { name:"intercest", min:320, caps:52, hold:3604, prevent:822, returns:304, oscar:30.6, dscar:4.2, tscar:34.8 },
+        { name:"Stann", min:320, caps:14, hold:1074, prevent:4697, returns:412, oscar:-8.9, dscar:29.2, tscar:20.3 },
+        { name:"Dor", min:310, caps:53, hold:3796, prevent:586, returns:180, oscar:31, dscar:-11.3, tscar:19.6 },
+        { name:"eee", min:310, caps:15, hold:1186, prevent:4081, returns:372, oscar:-7.2, dscar:23.3, tscar:16.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Degrees of Freedom", record: "7-0-0-7",
+      players: [
+        { name:"iAaronK", min:360, caps:8, hold:1290, prevent:4771, returns:529, oscar:-12.8, dscar:37.2, tscar:24.4 },
+        { name:"Turbo", min:360, caps:5, hold:679, prevent:5198, returns:531, oscar:-20.2, dscar:37, tscar:16.8 },
+        { name:"Fatal", min:360, caps:51, hold:3697, prevent:777, returns:187, oscar:28.5, dscar:-17.8, tscar:10.7 },
+        { name:"Jake from SF", min:260, caps:33, hold:2552, prevent:552, returns:147, oscar:16.4, dscar:-7.8, tscar:8.6 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "3-0-0-11",
+      players: [
+        { name:"Neon", min:200, caps:5, hold:861, prevent:3196, returns:294, oscar:-4.8, dscar:22.8, tscar:18.1 },
+        { name:"Dalek", min:222, caps:8, hold:925, prevent:2979, returns:267, oscar:-5.5, dscar:14.7, tscar:9.2 },
+        { name:"Eggo", min:229, caps:24, hold:2473, prevent:764, returns:142, oscar:14.4, dscar:-8.5, tscar:6 },
+        { name:"Wayne", min:160, caps:21, hold:1745, prevent:345, returns:85, oscar:11.3, dscar:-6.7, tscar:4.6 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Holy Rollers", record: "5-0-0-9",
+      players: [
+        { name:"MEGATRON", min:280, caps:32, hold:3540, prevent:538, returns:229, oscar:24.4, dscar:-3.9, tscar:20.5 },
+        { name:"JBB", min:310, caps:17, hold:1394, prevent:3134, returns:373, oscar:-3.9, dscar:23.3, tscar:19.4 },
+        { name:"karlwithak", min:270, caps:15, hold:1098, prevent:3245, returns:317, oscar:-6.9, dscar:16.8, tscar:9.9 },
+        { name:"Ty", min:310, caps:29, hold:2853, prevent:812, returns:217, oscar:14.4, dscar:-5.4, tscar:9 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Liberty Caps", record: "3-0-0-9",
+      players: [
+        { name:"CB13", min:280, caps:23, hold:2418, prevent:1957, returns:322, oscar:9.6, dscar:14.4, tscar:24 },
+        { name:"C Bivvey", min:270, caps:14, hold:1094, prevent:3724, returns:342, oscar:-4.7, dscar:21.2, tscar:16.5 },
+        { name:"danisk", min:180, caps:12, hold:1969, prevent:251, returns:119, oscar:7.5, dscar:-7.3, tscar:0.2 },
+        { name:"ComfortFlair", min:170, caps:12, hold:1058, prevent:1593, returns:157, oscar:1.9, dscar:3.1, tscar:5 },
+        { name:"Destar", min:110, caps:11, hold:1300, prevent:373, returns:71, oscar:7.4, dscar:-3.3, tscar:4.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Merballs", record: "10-0-0-4",
+      players: [
+        { name:"MiIky", min:419, caps:77, hold:5703, prevent:588, returns:228, oscar:56.1, dscar:-20.7, tscar:35.4 },
+        { name:"aardvark", min:420, caps:11, hold:1500, prevent:5705, returns:602, oscar:-14.5, dscar:48.5, tscar:34 },
+        { name:"BALLDON'TLIE", min:416, caps:74, hold:4624, prevent:989, returns:247, oscar:38.7, dscar:-16.7, tscar:22 },
+        { name:"DudeMcGuy", min:270, caps:12, hold:800, prevent:3691, returns:390, oscar:-8.5, dscar:29.2, tscar:20.7 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Return of the Ping", record: "2-0-0-12",
+      players: [
+        { name:"Frozty", min:272, caps:4, hold:757, prevent:3088, returns:386, oscar:-14.8, dscar:24.7, tscar:9.9 },
+        { name:"dywz", min:272, caps:22, hold:3237, prevent:487, returns:178, oscar:18.3, dscar:-8, tscar:10.3 },
+        { name:"Renegade", min:200, caps:17, hold:1883, prevent:324, returns:142, oscar:7.9, dscar:-5.3, tscar:2.6 },
+        { name:"Dodge", min:188, caps:10, hold:693, prevent:2302, returns:219, oscar:-2.7, dscar:13.6, tscar:10.9 },
+        { name:"lukemoo", min:100, caps:2, hold:391, prevent:697, returns:99, oscar:-4, dscar:4, tscar:0 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Snipe Hunt", record: "11-0-0-3",
+      players: [
+        { name:"Hulzy", min:320, caps:56, hold:4607, prevent:675, returns:147, oscar:40.5, dscar:-17.4, tscar:23.1 },
+        { name:"dodsfall", min:320, caps:18, hold:1285, prevent:4219, returns:380, oscar:-7.1, dscar:24.1, tscar:17 },
+        { name:"thenewguy.", min:283, caps:39, hold:3251, prevent:712, returns:206, oscar:26, dscar:-8.2, tscar:17.8 },
+        { name:"sIide", min:236, caps:6, hold:597, prevent:3621, returns:405, oscar:-11.3, dscar:34.4, tscar:23.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "Tears For Spheres", record: "7-0-0-6",
+      players: [
+        { name:"yank", min:340, caps:12, hold:1073, prevent:4781, returns:493, oscar:-12.3, dscar:37.5, tscar:25.2 },
+        { name:"bad", min:274, caps:5, hold:1031, prevent:3744, returns:373, oscar:-10.3, dscar:27.5, tscar:17.2 },
+        { name:"bright", min:280, caps:24, hold:3836, prevent:600, returns:182, oscar:25.2, dscar:-10, tscar:15.2 },
+        { name:"Spjork", min:288, caps:41, hold:3203, prevent:466, returns:159, oscar:22.9, dscar:-13.4, tscar:9.5 },
+        { name:"True North", min:86, caps:11, hold:734, prevent:405, returns:52, oscar:4.5, dscar:-1.4, tscar:3.1 }
+      ]
+    },
+    {
+      season: "S11", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "12-0-0-2",
+      players: [
+        { name:"sun chips", min:400, caps:69, hold:5315, prevent:1036, returns:248, oscar:44.5, dscar:-15.1, tscar:29.4 },
+        { name:"DaffodiI", min:400, caps:36, hold:2128, prevent:5511, returns:528, oscar:2.5, dscar:34.7, tscar:37.2 },
+        { name:"Brainiac", min:270, caps:21, hold:932, prevent:4205, returns:365, oscar:-4.9, dscar:22.9, tscar:18 },
+        { name:"Apopalypse", min:290, caps:36, hold:2707, prevent:1218, returns:191, oscar:16.3, dscar:-6.5, tscar:9.9 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "ALL CAPS", record: "10-0-0-4",
+      players: [
+        { name:"EASHY", min:320, caps:10, hold:1014, prevent:5401, returns:445, oscar:-8.1, dscar:39.1, tscar:31 },
+        { name:"SIDE", min:340, caps:10, hold:812, prevent:5921, returns:454, oscar:-10.8, dscar:38, tscar:27.2 },
+        { name:"MILKY", min:337, caps:52, hold:4518, prevent:367, returns:133, oscar:45.5, dscar:-24, tscar:21.6 },
+        { name:"BALLDON'TLIE", min:340, caps:53, hold:3151, prevent:826, returns:177, oscar:28.4, dscar:-15.7, tscar:12.7 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Boats 'n' Holds", record: "10-1-0-3",
+      players: [
+        { name:"Mr. Hat", min:320, caps:61, hold:4265, prevent:817, returns:242, oscar:42.7, dscar:-5.6, tscar:37.2 },
+        { name:"swerve?", min:240, caps:13, hold:1072, prevent:3178, returns:297, oscar:0, dscar:18.6, tscar:18.5 },
+        { name:"young savage", min:220, caps:12, hold:1316, prevent:1727, returns:209, oscar:2, dscar:3.8, tscar:5.8 },
+        { name:"caramelbaays", min:160, caps:34, hold:1719, prevent:546, returns:118, oscar:12.4, dscar:-2.5, tscar:9.9 },
+        { name:"eee", min:140, caps:10, hold:669, prevent:1641, returns:159, oscar:-1.6, dscar:8, tscar:6.4 },
+        { name:"badger", min:80, caps:3, hold:423, prevent:996, returns:82, oscar:-0.3, dscar:3.6, tscar:3.3 },
+        { name:"Stann", min:80, caps:4, hold:212, prevent:1367, returns:105, oscar:-2.3, dscar:6.6, tscar:4.3 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "9-0-0-5",
+      players: [
+        { name:"intercest", min:440, caps:79, hold:4462, prevent:872, returns:302, oscar:50.2, dscar:-5.8, tscar:44.4 },
+        { name:"Arbybear", min:400, caps:15, hold:1187, prevent:5789, returns:565, oscar:-11.4, dscar:41.1, tscar:29.7 },
+        { name:"C Bivvey", min:430, caps:14, hold:1241, prevent:6686, returns:514, oscar:-12.4, dscar:33.5, tscar:21.1 },
+        { name:"Destar", min:440, caps:46, hold:4038, prevent:1115, returns:244, oscar:28, dscar:-17.2, tscar:10.7 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Degrees of Freedom", record: "3-0-0-11",
+      players: [
+        { name:"Bal McCartny", min:270, caps:4, hold:478, prevent:4023, returns:423, oscar:-12.9, dscar:32.7, tscar:19.8 },
+        { name:"thenewguy.", min:120, caps:18, hold:1108, prevent:244, returns:68, oscar:12, dscar:-4.5, tscar:7.5 },
+        { name:"FLY", min:190, caps:5, hold:563, prevent:1982, returns:192, oscar:-6.3, dscar:9, tscar:2.7 },
+        { name:"Hulzy", min:280, caps:26, hold:2607, prevent:425, returns:151, oscar:16.9, dscar:-14.8, tscar:2.1 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "9-0-0-5",
+      players: [
+        { name:"Neon", min:410, caps:15, hold:1510, prevent:5797, returns:552, oscar:-7.1, dscar:44.3, tscar:37.3 },
+        { name:"Ball God", min:320, caps:71, hold:4990, prevent:969, returns:227, oscar:50, dscar:-18.5, tscar:31.5 },
+        { name:"YAC", min:339, caps:39, hold:2615, prevent:1682, returns:252, oscar:16.2, dscar:2, tscar:18.2 },
+        { name:"Daffodil", min:160, caps:9, hold:670, prevent:1981, returns:182, oscar:0.5, dscar:12.8, tscar:13.3 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Liberty Caps", record: "3-0-0-11",
+      players: [
+        { name:"CB13", min:239, caps:14, hold:661, prevent:2812, returns:403, oscar:-6.1, dscar:35.3, tscar:29.2 },
+        { name:"Fatal", min:270, caps:12, hold:1010, prevent:3284, returns:319, oscar:-5.2, dscar:17.1, tscar:11.9 },
+        { name:"danisk", min:260, caps:21, hold:2695, prevent:235, returns:144, oscar:15.6, dscar:-10.5, tscar:5.1 },
+        { name:"#Frozen", min:240, caps:25, hold:1674, prevent:515, returns:132, oscar:11.3, dscar:-9.3, tscar:2 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "MEME*TEAM", record: "9-0-0-5",
+      players: [
+        { name:"xXw3Edl0rdXx", min:397, caps:13, hold:922, prevent:7245, returns:581, oscar:-14, dscar:47.4, tscar:33.4 },
+        { name:"Syniikal", min:400, caps:4, hold:614, prevent:6909, returns:532, oscar:-18.6, dscar:50.4, tscar:31.8 },
+        { name:"LEBRON*JAMES", min:400, caps:73, hold:4462, prevent:800, returns:177, oscar:49.6, dscar:-24.2, tscar:25.4 },
+        { name:"okthen", min:360, caps:67, hold:3768, prevent:930, returns:173, oscar:39.2, dscar:-14.2, tscar:25 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Merballs", record: "6-1-1-6",
+      players: [
+        { name:"Iblis", min:280, caps:4, hold:628, prevent:4472, returns:531, oscar:-13.5, dscar:42.8, tscar:29.3 },
+        { name:"bright", min:280, caps:43, hold:3606, prevent:524, returns:172, oscar:30.6, dscar:-9.5, tscar:21.1 },
+        { name:"Genesis", min:280, caps:11, hold:734, prevent:4254, returns:322, oscar:-10.2, dscar:20.9, tscar:10.7 },
+        { name:"Apopalypse", min:270, caps:51, hold:2569, prevent:661, returns:122, oscar:24.4, dscar:-14.6, tscar:9.8 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Orlando Roller Bears", record: "8-0-0-6",
+      players: [
+        { name:"iAaronK", min:340, caps:11, hold:810, prevent:4803, returns:537, oscar:-12.3, dscar:40.9, tscar:28.6 },
+        { name:"toasty.", min:340, caps:60, hold:3850, prevent:685, returns:204, oscar:38.1, dscar:-11.5, tscar:26.6 },
+        { name:"aardvark", min:278, caps:5, hold:814, prevent:3902, returns:371, oscar:-11.8, dscar:25.8, tscar:14 },
+        { name:"Fronj", min:300, caps:40, hold:2858, prevent:721, returns:152, oscar:24.2, dscar:-17.4, tscar:6.8 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "Tears For Spheres", record: "7-0-1-6",
+      players: [
+        { name:"GOOBR", min:380, caps:56, hold:3604, prevent:692, returns:244, oscar:31.6, dscar:-9.5, tscar:22.1 },
+        { name:"BigBird", min:380, caps:12, hold:1226, prevent:5829, returns:504, oscar:-11.3, dscar:38, tscar:26.6 },
+        { name:"Spjork", min:380, caps:46, hold:3546, prevent:781, returns:211, oscar:25.8, dscar:-17, tscar:8.8 },
+        { name:"yank", min:340, caps:14, hold:984, prevent:4842, returns:456, oscar:-8.2, dscar:33.3, tscar:25.1 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "The Aristocaps", record: "1-0-0-13",
+      players: [
+        { name:"sIide", min:237, caps:6, hold:671, prevent:2794, returns:353, oscar:-6.7, dscar:25.6, tscar:18.9 },
+        { name:"Dalek", min:210, caps:8, hold:973, prevent:2424, returns:238, oscar:-4.8, dscar:11.8, tscar:6.9 },
+        { name:"dywz", min:210, caps:17, hold:2351, prevent:528, returns:106, oscar:14.6, dscar:-8.1, tscar:6.5 },
+        { name:"thenewguy.", min:80, caps:10, hold:786, prevent:191, returns:57, oscar:6.6, dscar:-2.5, tscar:4 }
+      ]
+    },
+    {
+      season: "S12", league: "MLTP",
+      franchise: "ThunderCaps", record: "7-0-0-7",
+      players: [
+        { name:"Abe Lincoln", min:340, caps:14, hold:1068, prevent:4258, returns:563, oscar:-6.7, dscar:47.9, tscar:41.2 },
+        { name:"Cosine180", min:320, caps:18, hold:1069, prevent:4168, returns:422, oscar:-6.8, dscar:29.7, tscar:22.9 },
+        { name:"protag", min:339, caps:58, hold:3915, prevent:532, returns:152, oscar:36, dscar:-22.9, tscar:13.1 },
+        { name:"swerve", min:300, caps:34, hold:2678, prevent:719, returns:134, oscar:16.9, dscar:-16.4, tscar:0.5 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "13 Seasons Why", record: "4-0-1-9",
+      players: [
+        { name:"ccga4", min:280, caps:11, hold:1131, prevent:2644, returns:330, oscar:-2.8, dscar:21.2, tscar:18.4 },
+        { name:"BRIGHT", min:280, caps:27, hold:2375, prevent:954, returns:209, oscar:16.6, dscar:-2.2, tscar:14.5 },
+        { name:"Dalek", min:153, caps:5, hold:403, prevent:1851, returns:202, oscar:-4.1, dscar:14.2, tscar:10.1 },
+        { name:"GOOBR", min:280, caps:19, hold:2482, prevent:545, returns:174, oscar:11.2, dscar:-14.6, tscar:-3.3 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Banana Boat Crew", record: "5-1-1-7",
+      players: [
+        { name:"BALLDON'TLIE", min:320, caps:7, hold:970, prevent:4524, returns:373, oscar:-6.6, dscar:26.6, tscar:20 },
+        { name:"Legman", min:320, caps:42, hold:3064, prevent:766, returns:195, oscar:27.3, dscar:-9.1, tscar:18.2 },
+        { name:"Syniikal", min:280, caps:5, hold:223, prevent:4412, returns:403, oscar:-14.8, dscar:39.1, tscar:24.4 },
+        { name:"Dino", min:200, caps:27, hold:1370, prevent:362, returns:104, oscar:11.8, dscar:-8.8, tscar:3 },
+        { name:"dino-iwnl-", min:110, caps:8, hold:1138, prevent:285, returns:51, oscar:7.3, dscar:-6.1, tscar:1.2 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Boats 'n' Holds", record: "9-1-0-4",
+      players: [
+        { name:"DT", min:400, caps:65, hold:3778, prevent:984, returns:205, oscar:39.3, dscar:-17.7, tscar:21.7 },
+        { name:"iAaronK", min:400, caps:8, hold:837, prevent:7013, returns:562, oscar:-16.9, dscar:41.1, tscar:24.2 },
+        { name:"Mr. Hat", min:370, caps:50, hold:4183, prevent:809, returns:234, oscar:39.3, dscar:-13.8, tscar:25.4 },
+        { name:"aardvark", min:360, caps:9, hold:1018, prevent:6168, returns:497, oscar:-12.7, dscar:36.6, tscar:23.9 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "10-1-0-3",
+      players: [
+        { name:"intercest", min:420, caps:71, hold:3695, prevent:1079, returns:338, oscar:37.2, dscar:-1.3, tscar:35.9 },
+        { name:"C Bivvey", min:410, caps:17, hold:1218, prevent:7280, returns:629, oscar:-10.5, dscar:50.3, tscar:39.9 },
+        { name:"Milky", min:419, caps:76, hold:4953, prevent:638, returns:202, oscar:51.4, dscar:-23.6, tscar:27.8 },
+        { name:"Stann", min:420, caps:14, hold:1025, prevent:6959, returns:546, oscar:-14.9, dscar:40.9, tscar:25.9 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Chase Jam", record: "4-2-0-8",
+      players: [
+        { name:"Hulzy", min:280, caps:37, hold:2893, prevent:593, returns:170, oscar:27, dscar:-8.9, tscar:18.1 },
+        { name:"Dank Sniper", min:237, caps:5, hold:593, prevent:3904, returns:309, oscar:-7.8, dscar:24.1, tscar:16.3 },
+        { name:"dodsfall", min:280, caps:7, hold:855, prevent:4134, returns:306, oscar:-6.4, dscar:20.7, tscar:14.3 },
+        { name:"swerve", min:240, caps:25, hold:2133, prevent:519, returns:132, oscar:17, dscar:-6.7, tscar:10.3 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Origin Ducks", record: "8-0-1-5",
+      players: [
+        { name:"Sherrattinho", min:340, caps:13, hold:1027, prevent:4894, returns:482, oscar:-4.9, dscar:37.6, tscar:32.8 },
+        { name:"okthen", min:334, caps:33, hold:2675, prevent:2658, returns:250, oscar:18.2, dscar:-0.3, tscar:17.9 },
+        { name:"Ball God", min:240, caps:40, hold:2268, prevent:608, returns:121, oscar:24.9, dscar:-12.6, tscar:12.3 },
+        { name:"swerve", min:153, caps:10, hold:889, prevent:929, returns:125, oscar:4.4, dscar:3.3, tscar:7.8 },
+        { name:"HARD GAY", min:140, caps:5, hold:527, prevent:1679, returns:169, oscar:-2.9, dscar:9.2, tscar:6.3 },
+        { name:"Ty", min:93, caps:12, hold:610, prevent:180, returns:51, oscar:4.6, dscar:-1.7, tscar:2.9 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Red Hot Chili Poppers", record: "7-0-1-6",
+      players: [
+        { name:"Destar", min:430, caps:55, hold:3047, prevent:849, returns:193, oscar:27.2, dscar:-27, tscar:0.3 },
+        { name:"DaffodiI", min:430, caps:39, hold:2235, prevent:3281, returns:472, oscar:16, dscar:21.7, tscar:37.6 },
+        { name:"Eashy", min:430, caps:14, hold:688, prevent:6756, returns:601, oscar:-11.2, dscar:54, tscar:42.9 },
+        { name:"young savage", min:200, caps:26, hold:1608, prevent:663, returns:116, oscar:15.5, dscar:-9.2, tscar:6.3 },
+        { name:"Jump Ball", min:150, caps:1, hold:324, prevent:2750, returns:220, oscar:-5.8, dscar:18.1, tscar:12.3 },
+        { name:"#Frozen", min:80, caps:9, hold:180, prevent:466, returns:69, oscar:2.4, dscar:2.1, tscar:4.6 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Spikeology", record: "8-0-1-5",
+      players: [
+        { name:"protag", min:310, caps:51, hold:3843, prevent:478, returns:152, oscar:35.7, dscar:-22.1, tscar:13.6 },
+        { name:"Frothy", min:260, caps:8, hold:594, prevent:4245, returns:376, oscar:-9.9, dscar:28.5, tscar:18.6 },
+        { name:"Altiger", min:220, caps:18, hold:1108, prevent:2950, returns:299, oscar:2.8, dscar:20.6, tscar:23.5 },
+        { name:"Fatal", min:262, caps:32, hold:2126, prevent:1467, returns:180, oscar:14.8, dscar:-4.2, tscar:10.6 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Spjork and the Seven Jorks", record: "6-0-2-6",
+      players: [
+        { name:"Bamboozler", min:280, caps:28, hold:2102, prevent:1973, returns:232, oscar:12.5, dscar:1.6, tscar:14.1 },
+        { name:"Weed", min:260, caps:11, hold:1027, prevent:2861, returns:328, oscar:-3.4, dscar:21.3, tscar:17.9 },
+        { name:"Spjork", min:240, caps:16, hold:1289, prevent:1342, returns:261, oscar:4.2, dscar:11.6, tscar:15.7 },
+        { name:"chipper", min:200, caps:23, hold:2142, prevent:543, returns:108, oscar:16, dscar:-9.6, tscar:6.4 },
+        { name:"Waynee", min:101, caps:14, hold:656, prevent:156, returns:67, oscar:5.4, dscar:-1.9, tscar:3.5 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "Tears For Spheres", record: "5-2-0-7",
+      players: [
+        { name:"WarriOrs", min:290, caps:50, hold:3666, prevent:494, returns:202, oscar:37.9, dscar:-10.2, tscar:27.7 },
+        { name:"yank", min:340, caps:20, hold:1114, prevent:5034, returns:441, oscar:-3.1, dscar:33.5, tscar:30.4 },
+        { name:"BigBird", min:340, caps:16, hold:1172, prevent:5650, returns:435, oscar:-7.2, dscar:28.2, tscar:21 },
+        { name:"Apopalypse", min:335, caps:28, hold:2477, prevent:645, returns:194, oscar:11.2, dscar:-13.6, tscar:-2.5 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "The New York Timers", record: "2-0-0-12",
+      players: [
+        { name:"Arbybear", min:240, caps:7, hold:790, prevent:3271, returns:361, oscar:-6.4, dscar:24.8, tscar:18.4 },
+        { name:"CB13", min:240, caps:19, hold:1847, prevent:1088, returns:219, oscar:9.4, dscar:5, tscar:14.4 },
+        { name:"Mufro", min:240, caps:20, hold:1812, prevent:412, returns:121, oscar:10.1, dscar:-10.6, tscar:-0.5 },
+        { name:"FLY", min:170, caps:8, hold:1049, prevent:1484, returns:139, oscar:0.1, dscar:0.6, tscar:0.7 },
+        { name:"q42", min:110, caps:4, hold:345, prevent:1267, returns:155, oscar:-2.9, dscar:9.9, tscar:7 }
+      ]
+    },
+    {
+      season: "S13", league: "MLTP",
+      franchise: "ThunderCaps", record: "9-0-0-5",
+      players: [
+        { name:"toasty.", min:340, caps:64, hold:3964, prevent:785, returns:185, oscar:44.3, dscar:-11.7, tscar:32.7 },
+        { name:"alchemist", min:380, caps:7, hold:1305, prevent:6421, returns:503, oscar:-9.6, dscar:37.9, tscar:28.3 },
+        { name:"siDe", min:379, caps:9, hold:1033, prevent:6492, returns:543, oscar:-13.3, dscar:36.1, tscar:22.8 },
+        { name:"clownmeaL", min:300, caps:41, hold:2833, prevent:667, returns:157, oscar:25.6, dscar:-16, tscar:9.6 },
+        { name:"noblord", min:120, caps:10, hold:918, prevent:214, returns:52, oscar:4.5, dscar:-9.5, tscar:-5 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "21 Juke Street", record: "9-0-0-9",
+      players: [
+        { name:"danisk", min:340, caps:25, hold:1929, prevent:620, returns:207, oscar:9.1, dscar:-8.8, tscar:0.3 },
+        { name:"#SelfySyntax", min:220, caps:27, hold:1225, prevent:223, returns:87, oscar:11.9, dscar:-13, tscar:-1.1 },
+        { name:"DEAD NAN", min:120, caps:16, hold:1338, prevent:324, returns:56, oscar:11.7, dscar:-7.2, tscar:4.5 },
+        { name:"d0pe", min:80, caps:5, hold:857, prevent:118, returns:50, oscar:5, dscar:-5, tscar:0 },
+        { name:"Some Paul", min:80, caps:5, hold:679, prevent:216, returns:55, oscar:1.7, dscar:-3.2, tscar:-1.6 },
+        { name:"aardvark", min:420, caps:14, hold:799, prevent:5550, returns:661, oscar:-11.6, dscar:54.7, tscar:43.1 },
+        { name:"Eashy.", min:330, caps:6, hold:700, prevent:3814, returns:433, oscar:-8.6, dscar:34.5, tscar:25.9 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "877CAPSNOW", record: "5-1-3-9",
+      players: [
+        { name:"Mufro", min:390, caps:45, hold:4265, prevent:1077, returns:227, oscar:30.1, dscar:-15.5, tscar:14.6 },
+        { name:"Weed", min:390, caps:40, hold:3437, prevent:1057, returns:258, oscar:21.9, dscar:-6.9, tscar:15 },
+        { name:"Mr.Gone", min:390, caps:9, hold:1203, prevent:4967, returns:545, oscar:-13.8, dscar:34.9, tscar:21.2 },
+        { name:"Bamboozler", min:370, caps:15, hold:1934, prevent:4278, returns:433, oscar:-2.4, dscar:24.9, tscar:22.5 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "A Blockwork Orange", record: "11-1-0-6",
+      players: [
+        { name:"fuckthecrc", min:420, caps:72, hold:4855, prevent:831, returns:249, oscar:50.7, dscar:-22.8, tscar:27.9 },
+        { name:"beast mode", min:350, caps:49, hold:2823, prevent:1364, returns:191, oscar:22.4, dscar:-14, tscar:8.4 },
+        { name:"FLY", min:120, caps:16, hold:965, prevent:343, returns:76, oscar:8.1, dscar:-4, tscar:4.1 },
+        { name:"MEX", min:420, caps:11, hold:823, prevent:6837, returns:634, oscar:-12.3, dscar:54.7, tscar:42.4 },
+        { name:"Calamitous", min:360, caps:20, hold:1129, prevent:6198, returns:468, oscar:-4.2, dscar:35.5, tscar:31.3 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "A Developmental Lad", record: "4-1-1-12",
+      players: [
+        { name:"MONSTAH", min:380, caps:48, hold:2921, prevent:610, returns:152, oscar:24.2, dscar:-22.6, tscar:1.6 },
+        { name:"Will1119", min:370, caps:46, hold:2936, prevent:795, returns:201, oscar:24.3, dscar:-19.4, tscar:4.9 },
+        { name:"phreak", min:380, caps:13, hold:858, prevent:5677, returns:649, oscar:-10.6, dscar:53.9, tscar:43.3 },
+        { name:"dodsfall", min:280, caps:5, hold:678, prevent:3290, returns:323, oscar:-8.5, dscar:23.3, tscar:14.8 },
+        { name:"Cheetosrule", min:100, caps:7, hold:479, prevent:1233, returns:128, oscar:0.4, dscar:6.6, tscar:7 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "12-0-1-5",
+      players: [
+        { name:"Vials", min:480, caps:63, hold:3971, prevent:1045, returns:253, oscar:32, dscar:-19.7, tscar:12.4 },
+        { name:"jjpoole", min:469, caps:75, hold:4092, prevent:1357, returns:272, oscar:39.3, dscar:-25.7, tscar:13.6 },
+        { name:"Stann", min:480, caps:23, hold:1464, prevent:7489, returns:636, oscar:-11.9, dscar:43.9, tscar:31.9 },
+        { name:"intercest", min:480, caps:32, hold:1678, prevent:6646, returns:798, oscar:0.8, dscar:70, tscar:70.8 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Centra of Attention", record: "15-0-1-2",
+      players: [
+        { name:"WarriOrs", min:480, caps:99, hold:6134, prevent:1411, returns:344, oscar:67.5, dscar:-12.1, tscar:55.3 },
+        { name:"Wanye", min:480, caps:82, hold:4562, prevent:1474, returns:321, oscar:38.8, dscar:-15.3, tscar:23.4 },
+        { name:"Frozen", min:480, caps:30, hold:1709, prevent:7538, returns:632, oscar:-10, dscar:40.7, tscar:30.7 },
+        { name:"Crippy", min:439, caps:32, hold:2250, prevent:6779, returns:640, oscar:3.2, dscar:43.5, tscar:46.6 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Ghostboosters", record: "11-0-1-6",
+      players: [
+        { name:"protag", min:400, caps:98, hold:4511, prevent:541, returns:172, oscar:60.8, dscar:-30, tscar:30.8 },
+        { name:"A-A-ron", min:360, caps:38, hold:2459, prevent:706, returns:178, oscar:20, dscar:-13.2, tscar:6.8 },
+        { name:"Sherrattinho", min:400, caps:8, hold:1004, prevent:6229, returns:567, oscar:-11.6, dscar:47.1, tscar:35.4 },
+        { name:"EndTheFed", min:240, caps:13, hold:567, prevent:4233, returns:338, oscar:-6.3, dscar:28.8, tscar:22.6 },
+        { name:"Syniikal", min:160, caps:2, hold:219, prevent:2086, returns:187, oscar:-6.2, dscar:17.1, tscar:10.8 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "London WASDs NA", record: "2-0-0-16",
+      players: [
+        { name:"Renegade", min:160, caps:19, hold:1207, prevent:409, returns:104, oscar:6.8, dscar:-8.2, tscar:-1.4 },
+        { name:"moobear", min:159, caps:17, hold:1265, prevent:136, returns:50, oscar:7.8, dscar:-14.3, tscar:-6.5 },
+        { name:"toucansam", min:100, caps:9, hold:435, prevent:145, returns:50, oscar:3, dscar:-2.4, tscar:0.7 },
+        { name:"BALLDON'TLIE", min:80, caps:11, hold:778, prevent:242, returns:54, oscar:6.8, dscar:-2.8, tscar:4 },
+        { name:"HARD GAY", min:160, caps:11, hold:884, prevent:1465, returns:138, oscar:2.2, dscar:2, tscar:4.2 },
+        { name:"Arbybear", min:360, caps:15, hold:1021, prevent:4547, returns:460, oscar:-7.4, dscar:28.9, tscar:21.5 },
+        { name:"Jump Ball", min:270, caps:17, hold:1514, prevent:1879, returns:261, oscar:6.2, dscar:13.4, tscar:19.6 },
+        { name:"ZenWhisper", min:110, caps:5, hold:434, prevent:703, returns:130, oscar:0, dscar:7.4, tscar:7.4 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Pequeños Pandas", record: "7-0-2-9",
+      players: [
+        { name:"veezy", min:360, caps:39, hold:2585, prevent:700, returns:176, oscar:20.3, dscar:-18.6, tscar:1.7 },
+        { name:"Bumballbee", min:311, caps:38, hold:1989, prevent:413, returns:122, oscar:18.3, dscar:-13.6, tscar:4.7 },
+        { name:"Bal McCartny", min:358, caps:10, hold:726, prevent:4998, returns:558, oscar:-8, dscar:48.6, tscar:40.6 },
+        { name:"quibble", min:185, caps:5, hold:531, prevent:2692, returns:195, oscar:-6.4, dscar:12.7, tscar:6.2 },
+        { name:"q42", min:160, caps:2, hold:356, prevent:1444, returns:214, oscar:-3.8, dscar:15.8, tscar:12.1 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Red Hot Chili Poppers", record: "13-1-1-3",
+      players: [
+        { name:"Pie Cat", min:264, caps:36, hold:2201, prevent:656, returns:153, oscar:21.6, dscar:-10.8, tscar:10.9 },
+        { name:"NEUhusky", min:240, caps:28, hold:2003, prevent:651, returns:121, oscar:15, dscar:-7.7, tscar:7.3 },
+        { name:"GUTS.", min:170, caps:18, hold:887, prevent:1200, returns:109, oscar:6.3, dscar:-1, tscar:5.4 },
+        { name:"BALLDON'TLIE", min:80, caps:23, hold:389, prevent:126, returns:27, oscar:9.7, dscar:-3.3, tscar:6.4 },
+        { name:"toasty.", min:390, caps:18, hold:1569, prevent:5415, returns:587, oscar:0.7, dscar:51.9, tscar:52.6 },
+        { name:"Misaki", min:340, caps:8, hold:979, prevent:5241, returns:421, oscar:-10.1, dscar:31.1, tscar:21 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Rollin' Golden Boulders", record: "4-4-1-9",
+      players: [
+        { name:"Pnaoxt", min:350, caps:51, hold:3247, prevent:715, returns:190, oscar:29, dscar:-15.1, tscar:13.9 },
+        { name:"felon fred", min:310, caps:39, hold:2976, prevent:1207, returns:236, oscar:25.2, dscar:-6.5, tscar:18.7 },
+        { name:"melon head", min:130, caps:8, hold:778, prevent:381, returns:82, oscar:3.4, dscar:-3.7, tscar:-0.2 },
+        { name:"Genesis", min:376, caps:17, hold:1199, prevent:4484, returns:418, oscar:-5.9, dscar:27.1, tscar:21.2 },
+        { name:"Iblis", min:300, caps:6, hold:857, prevent:4211, returns:442, oscar:-10.2, dscar:34.3, tscar:24.1 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Someballian Pirates", record: "5-1-0-11",
+      players: [
+        { name:"bubblez", min:260, caps:25, hold:2339, prevent:719, returns:141, oscar:13, dscar:-11.1, tscar:1.9 },
+        { name:"BALLDON'TLIE", min:200, caps:37, hold:1935, prevent:468, returns:139, oscar:19.2, dscar:-4.5, tscar:14.7 },
+        { name:"LioneI Messi", min:100, caps:7, hold:403, prevent:61, returns:48, oscar:1.7, dscar:-3.7, tscar:-1.9 },
+        { name:"Gem", min:320, caps:16, hold:1214, prevent:3067, returns:393, oscar:-1.6, dscar:23.8, tscar:22.2 },
+        { name:"obama.", min:120, caps:6, hold:472, prevent:1461, returns:176, oscar:-2.8, dscar:12.6, tscar:9.8 },
+        { name:"yiss", min:106, caps:5, hold:160, prevent:957, returns:143, oscar:-3.1, dscar:10.1, tscar:7 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "TC Jukes", record: "9-1-0-8",
+      players: [
+        { name:"Ty", min:400, caps:56, hold:3404, prevent:1027, returns:247, oscar:27.7, dscar:-6.6, tscar:21.1 },
+        { name:"Gasol", min:400, caps:56, hold:4243, prevent:904, returns:231, oscar:39.4, dscar:-21.2, tscar:18.2 },
+        { name:"side", min:400, caps:11, hold:1216, prevent:5889, returns:578, oscar:-10.8, dscar:40, tscar:29.2 },
+        { name:"boogie", min:307, caps:18, hold:1162, prevent:5111, returns:432, oscar:-2.6, dscar:30.6, tscar:28 },
+        { name:"ROFL", min:93, caps:2, hold:302, prevent:1012, returns:122, oscar:-2.9, dscar:7.6, tscar:4.8 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Tears for Spheres", record: "15-2-0-1",
+      players: [
+        { name:"GOOBR", min:540, caps:110, hold:5892, prevent:1134, returns:322, oscar:65.9, dscar:-20.1, tscar:45.9 },
+        { name:"ccga's mom", min:540, caps:88, hold:5649, prevent:1094, returns:382, oscar:56.6, dscar:-20.7, tscar:36 },
+        { name:"yank", min:540, caps:24, hold:1751, prevent:8738, returns:673, oscar:-9.5, dscar:49.1, tscar:39.6 },
+        { name:"BigBird", min:540, caps:35, hold:1862, prevent:9446, returns:687, oscar:-5.2, dscar:47.8, tscar:42.6 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "The RePublicans", record: "3-0-0-14",
+      players: [
+        { name:"eee", min:360, caps:39, hold:2094, prevent:1213, returns:209, oscar:15.5, dscar:-10.1, tscar:5.4 },
+        { name:"PK SMURFBALL", min:160, caps:19, hold:971, prevent:340, returns:81, oscar:8.7, dscar:-6.7, tscar:2 },
+        { name:"Gman8181", min:130, caps:15, hold:1378, prevent:321, returns:59, oscar:10.3, dscar:-7.4, tscar:2.9 },
+        { name:"Curry", min:280, caps:13, hold:996, prevent:3506, returns:245, oscar:-2.3, dscar:10.1, tscar:7.8 },
+        { name:"Syniikal", min:120, caps:0, hold:125, prevent:2907, returns:178, oscar:-5.8, dscar:19.4, tscar:13.6 },
+        { name:"EndTheFed", min:120, caps:1, hold:154, prevent:1031, returns:180, oscar:-3.8, dscar:16.7, tscar:12.9 },
+        { name:"quibble", min:120, caps:1, hold:214, prevent:1049, returns:171, oscar:-4.1, dscar:13.8, tscar:9.7 },
+        { name:"evanw4", min:80, caps:0, hold:176, prevent:696, returns:91, oscar:-2.7, dscar:6, tscar:3.4 }
+      ]
+    },
+    {
+      season: "S14", league: "MLTP",
+      franchise: "Whitecaps", record: "6-0-1-11",
+      players: [
+        { name:"Destar", min:380, caps:50, hold:2539, prevent:1231, returns:232, oscar:22.8, dscar:-11.5, tscar:11.3 },
+        { name:"Crossover", min:380, caps:45, hold:3100, prevent:826, returns:244, oscar:27, dscar:-15.8, tscar:11.2 },
+        { name:"C Bivvey", min:379, caps:16, hold:1210, prevent:5117, returns:461, oscar:-5.1, dscar:28.4, tscar:23.2 },
+        { name:"waterwheel", min:377, caps:13, hold:1070, prevent:5020, returns:419, oscar:-7.7, dscar:30.2, tscar:22.5 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "A Blockwork Orange", record: "10-0-1-3",
+      players: [
+        { name:"badger", min:340, caps:61, hold:3739, prevent:909, returns:231, oscar:44.3, dscar:-5.3, tscar:39 },
+        { name:"Curry", min:320, caps:39, hold:2536, prevent:973, returns:178, oscar:18.7, dscar:-8.7, tscar:10 },
+        { name:"phreak", min:200, caps:8, hold:615, prevent:3751, returns:219, oscar:-3.2, dscar:16.3, tscar:13.1 },
+        { name:"Spjork", min:160, caps:16, hold:677, prevent:2258, returns:146, oscar:3.4, dscar:5.6, tscar:9 },
+        { name:"Eashy", min:360, caps:14, hold:897, prevent:6450, returns:474, oscar:-9.2, dscar:41.9, tscar:32.7 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "ALL CAPS", record: "4-1-0-9",
+      players: [
+        { name:"BALLDON'TLIE", min:280, caps:42, hold:2484, prevent:749, returns:178, oscar:24.5, dscar:-8.9, tscar:15.5 },
+        { name:"BOOGIE", min:280, caps:16, hold:933, prevent:4521, returns:376, oscar:-6.8, dscar:27, tscar:20.2 },
+        { name:"MILKY", min:279, caps:44, hold:2983, prevent:389, returns:121, oscar:28.3, dscar:-16.2, tscar:12.2 },
+        { name:"SIDE", min:240, caps:9, hold:779, prevent:3643, returns:299, oscar:-7.7, dscar:16.6, tscar:8.9 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "Boostin Dynamo", record: "2-0-2-10",
+      players: [
+        { name:"Vials", min:280, caps:12, hold:870, prevent:3839, returns:372, oscar:-8.8, dscar:23.7, tscar:14.9 },
+        { name:"protag", min:280, caps:41, hold:2924, prevent:385, returns:141, oscar:22.7, dscar:-23.6, tscar:-0.9 },
+        { name:"intercest", min:280, caps:29, hold:1822, prevent:1357, returns:320, oscar:8.8, dscar:11.1, tscar:19.9 },
+        { name:"Calamitous", min:120, caps:11, hold:843, prevent:1110, returns:129, oscar:2.8, dscar:1.3, tscar:4.1 },
+        { name:"JOBA", min:160, caps:9, hold:790, prevent:1408, returns:143, oscar:-0.3, dscar:2.1, tscar:1.8 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "Centra of Attention", record: "12-1-0-1",
+      players: [
+        { name:"Daffodil", min:381, caps:16, hold:1090, prevent:6631, returns:651, oscar:-11, dscar:57.2, tscar:46.3 },
+        { name:"Eggo", min:381, caps:18, hold:1352, prevent:5895, returns:330, oscar:-3.9, dscar:16.5, tscar:12.6 },
+        { name:"bright", min:381, caps:62, hold:3944, prevent:1018, returns:253, oscar:39, dscar:-2.2, tscar:36.8 },
+        { name:"sun chips", min:381, caps:60, hold:3977, prevent:1004, returns:191, oscar:39.7, dscar:-17, tscar:22.6 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "CreoKoalas", record: "5-0-1-8",
+      players: [
+        { name:"Destar", min:330, caps:40, hold:1935, prevent:749, returns:171, oscar:18.2, dscar:-12.6, tscar:5.6 },
+        { name:"aardvark", min:290, caps:6, hold:721, prevent:4895, returns:385, oscar:-9.8, dscar:30, tscar:20.2 },
+        { name:"MEX", min:280, caps:10, hold:438, prevent:4216, returns:417, oscar:-10, dscar:36.5, tscar:26.6 },
+        { name:"Ty", min:250, caps:35, hold:1691, prevent:380, returns:115, oscar:19.3, dscar:-8.2, tscar:11.1 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "Orlando Roller Bears", record: "7-1-0-6",
+      players: [
+        { name:"taco.", min:370, caps:38, hold:2971, prevent:1019, returns:191, oscar:19.7, dscar:-12.4, tscar:7.3 },
+        { name:"toasty.", min:330, caps:54, hold:2744, prevent:1109, returns:230, oscar:30.5, dscar:-2.2, tscar:28.3 },
+        { name:"Cheetosrule", min:220, caps:10, hold:511, prevent:3407, returns:266, oscar:-6.8, dscar:20.7, tscar:13.9 },
+        { name:"Syniikal", min:210, caps:5, hold:234, prevent:4223, returns:293, oscar:-11.4, dscar:24.7, tscar:13.4 },
+        { name:"iAaronK", min:120, caps:1, hold:217, prevent:1910, returns:148, oscar:-5.4, dscar:12, tscar:6.6 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "The Good Gravy Boat", record: "6-0-0-8",
+      players: [
+        { name:"GOOBR", min:381, caps:45, hold:3350, prevent:748, returns:229, oscar:27.8, dscar:-11.5, tscar:16.4 },
+        { name:"Wanye", min:381, caps:22, hold:1046, prevent:5365, returns:586, oscar:-6.3, dscar:49.5, tscar:43.2 },
+        { name:"pulpo", min:381, caps:61, hold:3568, prevent:927, returns:177, oscar:36.3, dscar:-23.8, tscar:12.5 },
+        { name:"Frozen", min:200, caps:4, hold:364, prevent:2210, returns:235, oscar:-7.5, dscar:17, tscar:9.4 },
+        { name:"Spjork", min:178, caps:10, hold:673, prevent:2250, returns:211, oscar:-3.4, dscar:11.8, tscar:8.4 }
+      ]
+    },
+    {
+      season: "S15", league: "MLTP",
+      franchise: "The Wizard of Balls", record: "6-1-0-7",
+      players: [
+        { name:"DT", min:320, caps:46, hold:3007, prevent:963, returns:212, oscar:29.7, dscar:-5.9, tscar:23.8 },
+        { name:"Gasol", min:320, caps:36, hold:3044, prevent:793, returns:165, oscar:24.9, dscar:-19.8, tscar:5.1 },
+        { name:"Frothy", min:280, caps:11, hold:636, prevent:4836, returns:358, oscar:-9.8, dscar:28.3, tscar:18.5 },
+        { name:"Arbybear", min:180, caps:7, hold:595, prevent:2689, returns:234, oscar:-4.5, dscar:13.8, tscar:9.3 },
+        { name:"waterwheel", min:110, caps:6, hold:225, prevent:1845, returns:103, oscar:-4.2, dscar:5.6, tscar:1.4 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Centra of Attention", record: "12-0-1-1",
+      players: [
+        { name:"Apopalypse", min:350, caps:44, hold:2672, prevent:1161, returns:190, oscar:19.6, dscar:-11.3, tscar:8.4 },
+        { name:"Wanye", min:350, caps:22, hold:1488, prevent:5429, returns:458, oscar:-0.6, dscar:32.8, tscar:32.2 },
+        { name:"WarriOrs", min:310, caps:81, hold:3970, prevent:558, returns:214, oscar:52, dscar:-7.4, tscar:44.6 },
+        { name:"Bamboozler", min:290, caps:18, hold:835, prevent:4918, returns:402, oscar:-7.9, dscar:28.3, tscar:20.4 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Chennai Super Pings", record: "7-1-0-6",
+      players: [
+        { name:"A-A-ron", min:330, caps:39, hold:2170, prevent:886, returns:191, oscar:20.3, dscar:-8.5, tscar:11.7 },
+        { name:"waterwheel", min:330, caps:18, hold:1079, prevent:4463, returns:365, oscar:-3.2, dscar:24.9, tscar:21.7 },
+        { name:"aardvark", min:290, caps:17, hold:754, prevent:3888, returns:375, oscar:-1.5, dscar:31.8, tscar:30.3 },
+        { name:"Cheetosrule", min:250, caps:33, hold:2284, prevent:841, returns:147, oscar:21.8, dscar:-6.2, tscar:15.5 },
+        { name:"phreak", min:80, caps:10, hold:271, prevent:97, returns:69, oscar:3.1, dscar:1.6, tscar:4.7 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "CreoKoalas", record: "6-0-0-8",
+      players: [
+        { name:"Destar", min:320, caps:63, hold:1800, prevent:938, returns:186, oscar:27.9, dscar:-8.8, tscar:19.1 },
+        { name:"FLY", min:320, caps:25, hold:1514, prevent:1338, returns:178, oscar:6.6, dscar:-6.8, tscar:-0.2 },
+        { name:"Doris", min:280, caps:11, hold:384, prevent:3055, returns:352, oscar:-7.5, dscar:31.4, tscar:23.9 },
+        { name:"mis", min:240, caps:11, hold:428, prevent:2983, returns:353, oscar:-5.6, dscar:29.8, tscar:24.2 },
+        { name:"idiOt", min:80, caps:8, hold:567, prevent:319, returns:37, oscar:4.5, dscar:-4.5, tscar:0 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Mickey Mouse Poperation", record: "7-0-0-7",
+      players: [
+        { name:"CB13", min:290, caps:19, hold:795, prevent:4360, returns:415, oscar:-3.1, dscar:32.1, tscar:29 },
+        { name:"sidewalk", min:250, caps:33, hold:1733, prevent:623, returns:129, oscar:18.9, dscar:-11.8, tscar:7.1 },
+        { name:"777z", min:250, caps:8, hold:523, prevent:3899, returns:262, oscar:-6.9, dscar:18.5, tscar:11.5 },
+        { name:"Crossover", min:250, caps:30, hold:2395, prevent:531, returns:142, oscar:21.3, dscar:-11.6, tscar:9.8 },
+        { name:"Ball OON", min:80, caps:9, hold:227, prevent:629, returns:59, oscar:1.9, dscar:3.4, tscar:5.3 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Pi-Curious", record: "6-0-0-8",
+      players: [
+        { name:"Gasol", min:280, caps:44, hold:2724, prevent:521, returns:144, oscar:28.2, dscar:-13.8, tscar:14.3 },
+        { name:"boogie", min:280, caps:15, hold:1039, prevent:4061, returns:345, oscar:0.2, dscar:22.9, tscar:23.1 },
+        { name:"veezy", min:280, caps:41, hold:2066, prevent:643, returns:164, oscar:19.2, dscar:-9.5, tscar:9.8 },
+        { name:"Homie", min:270, caps:4, hold:343, prevent:4421, returns:314, oscar:-14.4, dscar:23.6, tscar:9.2 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Red Hot Chili Poppers", record: "7-0-1-6",
+      players: [
+        { name:"Curry", min:440, caps:27, hold:1734, prevent:6133, returns:455, oscar:0.8, dscar:29.3, tscar:30.1 },
+        { name:"Nice Person", min:440, caps:37, hold:2192, prevent:4530, returns:433, oscar:14.4, dscar:24.9, tscar:39.3 },
+        { name:"Spjork", min:400, caps:54, hold:3064, prevent:782, returns:215, oscar:30.1, dscar:-17.5, tscar:12.6 },
+        { name:"Fuzzy", min:210, caps:10, hold:346, prevent:2531, returns:221, oscar:-5.4, dscar:13.5, tscar:8.1 },
+        { name:"Tantrew", min:130, caps:24, hold:854, prevent:294, returns:72, oscar:12.7, dscar:-4.4, tscar:8.4 },
+        { name:"Suplex Slam", min:80, caps:9, hold:472, prevent:704, returns:63, oscar:2.8, dscar:0.9, tscar:3.7 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "She Wants the KD", record: "4-0-2-8",
+      players: [
+        { name:"Syniikal", min:280, caps:2, hold:66, prevent:4042, returns:404, oscar:-15.4, dscar:42.2, tscar:26.8 },
+        { name:"DEAD NAN", min:240, caps:49, hold:1603, prevent:186, returns:78, oscar:25.1, dscar:-17.8, tscar:7.3 },
+        { name:"taco", min:195, caps:23, hold:1010, prevent:963, returns:153, oscar:9, dscar:4.1, tscar:13.1 },
+        { name:"HERB", min:180, caps:6, hold:272, prevent:2605, returns:207, oscar:-6.4, dscar:14.8, tscar:8.4 },
+        { name:"Suchit", min:135, caps:17, hold:720, prevent:154, returns:58, oscar:7, dscar:-9.1, tscar:-2.1 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "Stranger Pings", record: "2-2-0-10",
+      players: [
+        { name:"d0pe", min:282, caps:45, hold:2461, prevent:452, returns:163, oscar:27, dscar:-15.8, tscar:11.2 },
+        { name:"#SelfySyntax", min:270, caps:34, hold:1506, prevent:591, returns:112, oscar:8.8, dscar:-15.3, tscar:-6.5 },
+        { name:"Abe Lincoln", min:240, caps:13, hold:805, prevent:2052, returns:353, oscar:-2.4, dscar:28.9, tscar:26.5 },
+        { name:"Juke of Yore", min:180, caps:9, hold:473, prevent:1931, returns:223, oscar:-6.1, dscar:12.9, tscar:6.8 },
+        { name:"refined", min:100, caps:2, hold:130, prevent:796, returns:130, oscar:-4.3, dscar:9.6, tscar:5.3 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "TC Jukes", record: "8-0-0-6",
+      players: [
+        { name:"Armbranch", min:420, caps:19, hold:969, prevent:6861, returns:596, oscar:-16.9, dscar:44.5, tscar:27.6 },
+        { name:"BALLDON'TLIE", min:420, caps:19, hold:1235, prevent:5997, returns:640, oscar:-8.3, dscar:54.4, tscar:46.1 },
+        { name:"Ty", min:420, caps:75, hold:3827, prevent:991, returns:236, oscar:38.7, dscar:-11.5, tscar:27.1 },
+        { name:"Frozen", min:419, caps:59, hold:3494, prevent:964, returns:208, oscar:32, dscar:-21.9, tscar:10.1 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "The Good Gravy Boat", record: "4-2-3-5",
+      players: [
+        { name:"BigBird", min:350, caps:10, hold:797, prevent:4186, returns:472, oscar:-10.9, dscar:35, tscar:24.2 },
+        { name:"GOOBR", min:310, caps:46, hold:2261, prevent:533, returns:173, oscar:23.8, dscar:-9.8, tscar:14 },
+        { name:"Raspberry", min:262, caps:14, hold:842, prevent:3192, returns:300, oscar:-2, dscar:20.7, tscar:18.7 },
+        { name:"Jake from SF", min:200, caps:16, hold:821, prevent:835, returns:158, oscar:2.4, dscar:1.1, tscar:3.5 },
+        { name:"ez", min:160, caps:15, hold:906, prevent:397, returns:74, oscar:4, dscar:-5.1, tscar:-1.1 },
+        { name:"YUNG ZEFF", min:110, caps:8, hold:498, prevent:156, returns:74, oscar:2.4, dscar:0.1, tscar:2.5 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "10-0-0-4",
+      players: [
+        { name:"bright", min:380, caps:67, hold:3985, prevent:1142, returns:273, oscar:43.7, dscar:-2, tscar:41.7 },
+        { name:"Eggo", min:380, caps:26, hold:1195, prevent:6237, returns:424, oscar:-2.4, dscar:29.7, tscar:27.3 },
+        { name:"ccga4", min:375, caps:16, hold:1304, prevent:6204, returns:442, oscar:-5.7, dscar:31.8, tscar:26.1 },
+        { name:"pulpo", min:283, caps:63, hold:3065, prevent:787, returns:141, oscar:35, dscar:-16.3, tscar:18.7 },
+        { name:"blackberry", min:80, caps:10, hold:488, prevent:201, returns:32, oscar:3.8, dscar:-1.8, tscar:2 }
+      ]
+    },
+    {
+      season: "S16", league: "MLTP",
+      franchise: "The United Pingdom", record: "4-2-0-8",
+      players: [
+        { name:"Arbybear", min:300, caps:9, hold:759, prevent:5267, returns:429, oscar:-11, dscar:32.6, tscar:21.6 },
+        { name:"Mufro", min:300, caps:52, hold:2747, prevent:887, returns:144, oscar:28.3, dscar:-15.4, tscar:12.9 },
+        { name:"Will1119", min:300, caps:26, hold:2931, prevent:589, returns:158, oscar:19.1, dscar:-13.5, tscar:5.6 },
+        { name:"obama.", min:160, caps:8, hold:697, prevent:2061, returns:202, oscar:-2.3, dscar:12.4, tscar:10.1 },
+        { name:"quibble", min:140, caps:3, hold:413, prevent:2928, returns:163, oscar:-4.2, dscar:14.5, tscar:10.3 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "ALL CAPS", record: "8-0-0-8",
+      players: [
+        { name:"ARMBRANCH", min:360, caps:12, hold:718, prevent:5997, returns:527, oscar:-14, dscar:44.8, tscar:30.8 },
+        { name:"BALLDON'TLIE", min:360, caps:31, hold:1946, prevent:3498, returns:369, oscar:8.9, dscar:19.2, tscar:28 },
+        { name:"DYWZ", min:360, caps:37, hold:2871, prevent:1103, returns:204, oscar:17.4, dscar:-9.8, tscar:7.6 },
+        { name:"FURY.", min:240, caps:35, hold:2551, prevent:485, returns:134, oscar:23.6, dscar:-11.4, tscar:12.1 },
+        { name:"OBAMA.", min:120, caps:5, hold:279, prevent:1634, returns:119, oscar:-4, dscar:7.5, tscar:3.5 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Balls on Parade", record: "3-0-0-13",
+      players: [
+        { name:"Bal McCartny", min:320, caps:9, hold:612, prevent:6139, returns:506, oscar:-9.9, dscar:45.5, tscar:35.6 },
+        { name:"EIsa", min:280, caps:32, hold:2436, prevent:310, returns:128, oscar:20.3, dscar:-17.6, tscar:2.7 },
+        { name:"Curry", min:280, caps:13, hold:1069, prevent:4488, returns:287, oscar:-2.9, dscar:16.6, tscar:13.7 },
+        { name:"FUCKDACRC", min:80, caps:10, hold:652, prevent:220, returns:33, oscar:4.7, dscar:-3.9, tscar:0.8 },
+        { name:"sidewalk", min:100, caps:6, hold:751, prevent:248, returns:38, oscar:3.3, dscar:-7.6, tscar:-4.3 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Centra of Attention", record: "12-0-0-4",
+      players: [
+        { name:"WarriOrs", min:420, caps:94, hold:4972, prevent:1054, returns:292, oscar:60.6, dscar:-5.6, tscar:54.9 },
+        { name:"Wanye", min:420, caps:72, hold:3827, prevent:1527, returns:285, oscar:34.6, dscar:-7.1, tscar:27.5 },
+        { name:"Frothy", min:420, caps:15, hold:917, prevent:7292, returns:523, oscar:-14.6, dscar:36.4, tscar:21.7 },
+        { name:"Eggo", min:380, caps:22, hold:1341, prevent:5686, returns:350, oscar:-3, dscar:16.9, tscar:13.9 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Chennai Super Pings", record: "2-1-0-13",
+      players: [
+        { name:"Gasol", min:320, caps:37, hold:2897, prevent:765, returns:177, oscar:24.2, dscar:-11.5, tscar:12.8 },
+        { name:"waterwheel", min:320, caps:10, hold:1062, prevent:4634, returns:275, oscar:-8.4, dscar:11.2, tscar:2.8 },
+        { name:"thenewguy.", min:280, caps:25, hold:1812, prevent:2537, returns:289, oscar:11.9, dscar:13.8, tscar:25.8 },
+        { name:"pulpo", min:231, caps:23, hold:2320, prevent:490, returns:129, oscar:17.4, dscar:-11, tscar:6.4 },
+        { name:"yiss", min:128, caps:2, hold:309, prevent:2382, returns:153, oscar:-5, dscar:11, tscar:6 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "CreoKoalas", record: "4-0-2-10",
+      players: [
+        { name:"Destar", min:280, caps:27, hold:2230, prevent:759, returns:129, oscar:15.9, dscar:-12.3, tscar:3.6 },
+        { name:"Doris", min:280, caps:4, hold:901, prevent:4026, returns:317, oscar:-7.1, dscar:25.1, tscar:18 },
+        { name:"misaki", min:260, caps:1, hold:477, prevent:4447, returns:343, oscar:-12.7, dscar:33, tscar:20.2 },
+        { name:"FLY", min:200, caps:9, hold:1265, prevent:981, returns:125, oscar:1.7, dscar:-3.7, tscar:-2 },
+        { name:"d0pe", min:120, caps:10, hold:1008, prevent:214, returns:51, oscar:8.1, dscar:-6, tscar:2.1 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Holy Rollers", record: "9-0-0-7",
+      players: [
+        { name:"Abe Lincoln", min:420, caps:31, hold:1812, prevent:5359, returns:598, oscar:3.5, dscar:49.3, tscar:52.8 },
+        { name:"DEAD NAN", min:350, caps:64, hold:3999, prevent:585, returns:152, oscar:41.4, dscar:-25.4, tscar:16 },
+        { name:"boogie", min:340, caps:23, hold:1487, prevent:4170, returns:386, oscar:-1.1, dscar:19.2, tscar:18.1 },
+        { name:"Ball OON", min:340, caps:21, hold:1827, prevent:1630, returns:195, oscar:2.3, dscar:-3.3, tscar:-1 },
+        { name:"King's Crown", min:120, caps:4, hold:303, prevent:1999, returns:161, oscar:-4.6, dscar:11.5, tscar:6.9 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Mickey Mouse Poperation", record: "8-1-0-7",
+      players: [
+        { name:"CB13", min:350, caps:36, hold:2069, prevent:2647, returns:338, oscar:12.9, dscar:15.8, tscar:28.7 },
+        { name:"Crossover", min:340, caps:36, hold:3004, prevent:584, returns:198, oscar:26.6, dscar:-15.2, tscar:11.4 },
+        { name:"toaster.", min:280, caps:10, hold:823, prevent:4483, returns:329, oscar:-6.5, dscar:25, tscar:18.5 },
+        { name:"Pnaoxt", min:170, caps:19, hold:1184, prevent:304, returns:76, oscar:8.6, dscar:-6.5, tscar:2.2 },
+        { name:"Syniikal", min:120, caps:0, hold:46, prevent:2974, returns:158, oscar:-7.6, dscar:17, tscar:9.4 },
+        { name:"beast mode", min:90, caps:10, hold:429, prevent:574, returns:65, oscar:3.2, dscar:1, tscar:4.3 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Red Hot Chili Poppers", record: "14-0-1-1",
+      players: [
+        { name:"badger", min:440, caps:79, hold:4593, prevent:1353, returns:297, oscar:53.1, dscar:-5.9, tscar:47.2 },
+        { name:"Nice Person", min:440, caps:19, hold:1385, prevent:7416, returns:535, oscar:-8.2, dscar:41.4, tscar:33.2 },
+        { name:"Bamboozler", min:440, caps:23, hold:1699, prevent:6776, returns:423, oscar:-4.6, dscar:23.9, tscar:19.3 },
+        { name:"Matetricks", min:400, caps:65, hold:3727, prevent:1416, returns:216, oscar:38.2, dscar:-6.4, tscar:31.8 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "Soviet Ballers", record: "7-1-0-8",
+      players: [
+        { name:"Suchit", min:280, caps:33, hold:2479, prevent:919, returns:186, oscar:19, dscar:-3.7, tscar:15.4 },
+        { name:"okthen99", min:270, caps:31, hold:2834, prevent:1020, returns:172, oscar:25.4, dscar:-6.5, tscar:18.9 },
+        { name:"A-A-ron", min:240, caps:16, hold:769, prevent:3188, returns:245, oscar:-2, dscar:14.5, tscar:12.5 },
+        { name:"RacgiMan", min:180, caps:2, hold:346, prevent:2938, returns:191, oscar:-7.8, dscar:13.8, tscar:6.1 },
+        { name:"anduin", min:162, caps:5, hold:515, prevent:2241, returns:181, oscar:-4, dscar:10.6, tscar:6.5 },
+        { name:"glob.", min:120, caps:8, hold:1098, prevent:354, returns:71, oscar:5.8, dscar:-3, tscar:2.9 },
+        { name:"Mike Trout", min:118, caps:5, hold:281, prevent:2245, returns:164, oscar:-4.4, dscar:12.7, tscar:8.3 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "TC Jukes", record: "9-1-0-6",
+      players: [
+        { name:"GeT_RiGhT", min:380, caps:11, hold:730, prevent:6555, returns:462, oscar:-16.9, dscar:36.9, tscar:19.9 },
+        { name:"Ty", min:380, caps:47, hold:2707, prevent:2446, returns:332, oscar:23.5, dscar:11, tscar:34.6 },
+        { name:"Frozen", min:380, caps:50, hold:2981, prevent:1522, returns:246, oscar:25.9, dscar:-8.2, tscar:17.8 },
+        { name:"aardvark", min:180, caps:9, hold:601, prevent:2924, returns:249, oscar:-3.2, dscar:19.3, tscar:16.1 },
+        { name:"Djinni", min:120, caps:17, hold:1050, prevent:202, returns:69, oscar:8.2, dscar:-4, tscar:4.2 },
+        { name:"d0pe", min:80, caps:13, hold:836, prevent:141, returns:29, oscar:8.2, dscar:-7.3, tscar:0.9 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "11-0-0-5",
+      players: [
+        { name:"bright", min:460, caps:95, hold:5455, prevent:1323, returns:299, oscar:63.9, dscar:-2, tscar:61.9 },
+        { name:"GOOBR", min:460, caps:76, hold:4518, prevent:1491, returns:304, oscar:40.9, dscar:-7.6, tscar:33.3 },
+        { name:"BigBird", min:460, caps:14, hold:1012, prevent:9236, returns:576, oscar:-17.1, dscar:41.4, tscar:24.3 },
+        { name:"Epiphany", min:440, caps:19, hold:978, prevent:7565, returns:484, oscar:-11.6, dscar:33.8, tscar:22.2 }
+      ]
+    },
+    {
+      season: "S17", league: "MLTP",
+      franchise: "United Pingdom", record: "5-0-1-10",
+      players: [
+        { name:"#SelfySyntax", min:320, caps:36, hold:2544, prevent:644, returns:131, oscar:20.3, dscar:-14.8, tscar:5.5 },
+        { name:"Arbybear", min:310, caps:5, hold:606, prevent:4677, returns:438, oscar:-13.9, dscar:31.2, tscar:17.3 },
+        { name:"Djinni", min:200, caps:30, hold:1846, prevent:443, returns:94, oscar:19.2, dscar:-6.9, tscar:12.4 },
+        { name:"refined", min:200, caps:11, hold:770, prevent:2447, returns:255, oscar:-0.7, dscar:20.4, tscar:19.6 },
+        { name:"veezy", min:120, caps:11, hold:793, prevent:119, returns:54, oscar:5.8, dscar:-3.5, tscar:2.3 },
+        { name:"aardvark", min:120, caps:1, hold:191, prevent:1674, returns:168, oscar:-5.3, dscar:14.2, tscar:9 }
+      ]
+    },
+    {
+      season: "S18", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "12-0-1-1",
+      players: [
+        { name:"bright", min:380, caps:80, hold:4034, prevent:1114, returns:295, oscar:48.2, dscar:2.9, tscar:51.1 },
+        { name:"GOOBR", min:380, caps:13, hold:1012, prevent:6009, returns:537, oscar:-13.8, dscar:39.5, tscar:25.7 },
+        { name:"GeT_RiGhT", min:300, caps:9, hold:593, prevent:5131, returns:372, oscar:-15.2, dscar:30.2, tscar:15.1 },
+        { name:"DEAD NAN", min:300, caps:47, hold:2661, prevent:834, returns:184, oscar:24.3, dscar:-13.7, tscar:10.6 }
+      ]
+    },
+    {
+      season: "S19", league: "MLTP",
+      franchise: "The Land Before Timers", record: "7-1-0-6",
+      players: [
+        { name:"Ty", min:320, caps:49, hold:2708, prevent:1046, returns:212, oscar:27.2, dscar:-6, tscar:21.2 },
+        { name:"Taurus", min:320, caps:21, hold:2029, prevent:3808, returns:345, oscar:4.3, dscar:17.7, tscar:22 },
+        { name:"yiss", min:298, caps:3, hold:435, prevent:5224, returns:378, oscar:-16.4, dscar:29.2, tscar:12.8 },
+        { name:"Frozen", min:320, caps:35, hold:2739, prevent:1114, returns:191, oscar:20.9, dscar:-10.1, tscar:10.8 }
+      ]
+    },
+    {
+      season: "S20", league: "MLTP",
+      franchise: "Centra of Attention", record: "8-0-2-4",
+      players: [
+        { name:"GOOBR", min:320, caps:56, hold:3485, prevent:1078, returns:205, oscar:33.3, dscar:-5.9, tscar:27.4 },
+        { name:"Tantrew", min:320, caps:55, hold:3640, prevent:923, returns:167, oscar:35.2, dscar:-12.9, tscar:22.3 },
+        { name:"Luka Doncic", min:160, caps:16, hold:770, prevent:2009, returns:186, oscar:0.6, dscar:10.9, tscar:11.4 },
+        { name:"RacgiMan", min:160, caps:8, hold:483, prevent:2199, returns:226, oscar:-5.2, dscar:16.3, tscar:11.2 },
+        { name:"PingPrisoner", min:160, caps:1, hold:32, prevent:3032, returns:215, oscar:-11, dscar:21.4, tscar:10.4 },
+        { name:"GeT_RiGhT", min:120, caps:2, hold:290, prevent:2202, returns:105, oscar:-5.4, dscar:7.8, tscar:2.4 }
+      ]
+    },
+    {
+      season: "S20", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "12-1-0-1",
+      players: [
+        { name:"bright", min:400, caps:67, hold:4956, prevent:1691, returns:295, oscar:49.8, dscar:3, tscar:52.8 },
+        { name:"Wanye", min:356, caps:24, hold:1124, prevent:6363, returns:436, oscar:-4.5, dscar:33.9, tscar:29.4 },
+        { name:"aardvark", min:400, caps:63, hold:3222, prevent:1323, returns:256, oscar:30, dscar:-5.6, tscar:24.4 },
+        { name:"Pandora", min:399, caps:17, hold:899, prevent:7018, returns:464, oscar:-13.7, dscar:32.6, tscar:18.9 }
+      ]
+    },
+    {
+      season: "S21", league: "MLTP",
+      franchise: "Centra of Attention", record: "7-2-0-5",
+      players: [
+        { name:"Wanye", min:328, caps:18, hold:1066, prevent:5747, returns:420, oscar:-5.2, dscar:33.5, tscar:28.3 },
+        { name:"GOOBR", min:340, caps:43, hold:3392, prevent:985, returns:225, oscar:31.5, dscar:-8.3, tscar:23.2 },
+        { name:"Sherra", min:340, caps:45, hold:3691, prevent:891, returns:199, oscar:33.9, dscar:-15.5, tscar:18.4 },
+        { name:"hz", min:180, caps:11, hold:742, prevent:2823, returns:212, oscar:-1.9, dscar:14.1, tscar:12.2 }
+      ]
+    },
+    {
+      season: "S22", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "2-3-0-9",
+      players: [
+        { name:"Mr. Hat", min:280, caps:39, hold:3206, prevent:792, returns:199, oscar:32.5, dscar:-8, tscar:24.5 },
+        { name:"Curry", min:259, caps:5, hold:974, prevent:3756, returns:284, oscar:-7.5, dscar:15.4, tscar:7.9 },
+        { name:"ShinjukuGirl", min:200, caps:9, hold:1532, prevent:1509, returns:197, oscar:4.9, dscar:5.5, tscar:10.4 },
+        { name:"Zig!", min:91, caps:2, hold:324, prevent:1314, returns:98, oscar:-2.9, dscar:4.5, tscar:1.6 },
+        { name:"Alphachurro", min:89, caps:5, hold:251, prevent:1193, returns:93, oscar:-3.1, dscar:3.2, tscar:0 },
+        { name:"First", min:80, caps:6, hold:515, prevent:196, returns:41, oscar:2.8, dscar:-2.5, tscar:0.3 },
+        { name:"Arbybear", min:80, caps:4, hold:199, prevent:1678, returns:86, oscar:-1.9, dscar:6.5, tscar:4.5 }
+      ]
+    },
+    {
+      season: "S23", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "0-0-1-13",
+      players: [
+        { name:"First", min:240, caps:25, hold:1925, prevent:718, returns:159, oscar:13.9, dscar:-5.4, tscar:8.4 },
+        { name:"aardvark", min:239, caps:15, hold:1105, prevent:1918, returns:194, oscar:-0.5, dscar:3.5, tscar:3 },
+        { name:"Raven", min:200, caps:11, hold:975, prevent:2527, returns:203, oscar:-1.1, dscar:11.1, tscar:10 },
+        { name:"Bal McCartny", min:200, caps:4, hold:541, prevent:2931, returns:252, oscar:-7.2, dscar:16.6, tscar:9.4 },
+        { name:"#SelfySyntax", min:160, caps:14, hold:1336, prevent:696, returns:57, oscar:7.5, dscar:-7.1, tscar:0.4 }
+      ]
+    },
+    {
+      season: "S24", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "8-0-0-6",
+      players: [
+        { name:"Mr. Hat", min:340, caps:55, hold:3734, prevent:1203, returns:218, oscar:38.4, dscar:-13, tscar:25.4 },
+        { name:"Drippy", min:199, caps:34, hold:1907, prevent:1339, returns:192, oscar:18, dscar:2.3, tscar:20.2 },
+        { name:"Xile", min:380, caps:15, hold:1498, prevent:6206, returns:428, oscar:-8.4, dscar:26.3, tscar:17.9 },
+        { name:"yawn", min:240, caps:3, hold:657, prevent:3942, returns:310, oscar:-9.3, dscar:24.3, tscar:15 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "ALL CAPS", record: "6-1-0-7",
+      players: [
+        { name:"FENDER", min:380, caps:53, hold:4084, prevent:1131, returns:257, oscar:34.3, dscar:-6.7, tscar:27.5 },
+        { name:"BALLDON'TLIE", min:380, caps:52, hold:3268, prevent:2473, returns:298, oscar:25.7, dscar:3.4, tscar:29.1 },
+        { name:"MAGNOLIA", min:300, caps:8, hold:1021, prevent:4582, returns:324, oscar:-8.9, dscar:19.7, tscar:10.8 },
+        { name:"MR AWESOME:)", min:380, caps:5, hold:764, prevent:6163, returns:421, oscar:-20.7, dscar:27.2, tscar:6.6 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "CircleJukers", record: "7-1-0-6",
+      players: [
+        { name:"toasty", min:360, caps:63, hold:3648, prevent:1365, returns:242, oscar:37.3, dscar:-2.4, tscar:34.9 },
+        { name:"q42", min:360, caps:12, hold:1768, prevent:5905, returns:421, oscar:-3.1, dscar:29.4, tscar:26.3 },
+        { name:"NameLEss", min:360, caps:18, hold:1127, prevent:6350, returns:409, oscar:-9.1, dscar:25.6, tscar:16.5 },
+        { name:"Meg", min:160, caps:27, hold:1358, prevent:546, returns:104, oscar:12.5, dscar:-5.2, tscar:7.3 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Ghostboosters", record: "5-0-0-9",
+      players: [
+        { name:"Doris", min:280, caps:9, hold:1132, prevent:3846, returns:376, oscar:-6.5, dscar:32.7, tscar:26.3 },
+        { name:"Grimrog", min:200, caps:28, hold:1918, prevent:563, returns:147, oscar:15.2, dscar:-5.4, tscar:9.8 },
+        { name:"ez", min:200, caps:28, hold:1717, prevent:705, returns:109, oscar:14.2, dscar:-6.3, tscar:7.9 },
+        { name:"NEB.", min:280, caps:13, hold:1648, prevent:2482, returns:245, oscar:-1.5, dscar:5.8, tscar:4.3 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "5-1-0-8",
+      players: [
+        { name:"Pro Boat", min:320, caps:16, hold:1582, prevent:5072, returns:411, oscar:-1.8, dscar:28.1, tscar:26.2 },
+        { name:"GOOBR", min:320, caps:39, hold:3112, prevent:990, returns:225, oscar:23, dscar:-7.9, tscar:15.1 },
+        { name:"ccga4", min:320, caps:41, hold:2850, prevent:1023, returns:156, oscar:22.3, dscar:-11.9, tscar:10.3 },
+        { name:"Meg", min:120, caps:6, hold:480, prevent:1764, returns:119, oscar:-1.5, dscar:7.7, tscar:6.1 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Miami Ballphins", record: "4-0-1-9",
+      players: [
+        { name:"Ball-erina", min:250, caps:37, hold:2570, prevent:846, returns:143, oscar:23.4, dscar:-7.4, tscar:15.9 },
+        { name:"Kei Yonagi", min:200, caps:20, hold:2007, prevent:535, returns:142, oscar:14.3, dscar:-3.5, tscar:10.8 },
+        { name:"TomatoFarmer", min:280, caps:2, hold:119, prevent:4824, returns:361, oscar:-21.7, dscar:29, tscar:7.2 },
+        { name:"St. Bernard", min:160, caps:5, hold:802, prevent:1942, returns:153, oscar:-3.2, dscar:6.4, tscar:3.2 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Mumble Cappers", record: "10-0-1-3",
+      players: [
+        { name:"Wanye", min:360, caps:19, hold:1129, prevent:6846, returns:564, oscar:-9.2, dscar:50.5, tscar:41.3 },
+        { name:"kool aid", min:360, caps:62, hold:3661, prevent:1109, returns:247, oscar:36.9, dscar:-7.7, tscar:29.2 },
+        { name:"gg!", min:360, caps:58, hold:4863, prevent:807, returns:147, oscar:43, dscar:-19.2, tscar:23.8 },
+        { name:"dodsfall", min:320, caps:16, hold:1016, prevent:4993, returns:349, oscar:-9.2, dscar:22.5, tscar:13.3 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Snipe Hunt", record: "10-0-1-3",
+      players: [
+        { name:"Ty", min:360, caps:40, hold:2067, prevent:3606, returns:318, oscar:11, dscar:14.5, tscar:25.6 },
+        { name:"Armbranch", min:360, caps:8, hold:1156, prevent:5843, returns:506, oscar:-14.3, dscar:39.5, tscar:25.3 },
+        { name:"aaron", min:360, caps:34, hold:2431, prevent:2723, returns:346, oscar:11.7, dscar:12.8, tscar:24.5 },
+        { name:"no name", min:360, caps:54, hold:3346, prevent:1449, returns:213, oscar:31.4, dscar:-8.5, tscar:22.9 }
+      ]
+    },
+    {
+      season: "S25", league: "MLTP",
+      franchise: "Willy MonkaS and the Chocolate Factor-Re", record: "6-0-0-8",
+      players: [
+        { name:"thenewguy.", min:340, caps:53, hold:3361, prevent:1088, returns:237, oscar:31.1, dscar:-4.4, tscar:26.8 },
+        { name:"Messi", min:320, caps:48, hold:3526, prevent:1101, returns:180, oscar:30.8, dscar:-10.6, tscar:20.2 },
+        { name:"grumpy", min:300, caps:18, hold:1015, prevent:4750, returns:310, oscar:-6.3, dscar:20.5, tscar:14.2 },
+        { name:"Xile", min:180, caps:5, hold:656, prevent:2745, returns:201, oscar:-4.4, dscar:13, tscar:8.5 }
+      ]
+    },
+    {
+      season: "S26", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "8-0-1-5",
+      players: [
+        { name:"Pro Boat", min:460, caps:26, hold:1829, prevent:7773, returns:609, oscar:-5, dscar:48.1, tscar:43.1 },
+        { name:"d4nk", min:457, caps:71, hold:4104, prevent:1383, returns:283, oscar:39, dscar:-6.9, tscar:32.1 },
+        { name:"Curry", min:460, caps:17, hold:1450, prevent:7984, returns:567, oscar:-15.6, dscar:38.5, tscar:22.8 },
+        { name:"ccga4", min:460, caps:65, hold:4329, prevent:1446, returns:214, oscar:36.6, dscar:-18.3, tscar:18.4 }
+      ]
+    },
+    {
+      season: "S27", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "15-2-4-14",
+      players: [
+        { name:"Pro Boat", min:390, caps:16, hold:1251, prevent:5760, returns:557, oscar:-11.5, dscar:44, tscar:32.5 },
+        { name:"aaron", min:440, caps:50, hold:3623, prevent:2012, returns:332, oscar:24.5, dscar:-1.9, tscar:22.5 },
+        { name:"juke juice", min:380, caps:61, hold:4167, prevent:945, returns:261, oscar:37.7, dscar:-17, tscar:20.7 },
+        { name:"Deafheaven", min:440, caps:31, hold:1793, prevent:5742, returns:400, oscar:-5.6, dscar:16.2, tscar:10.7 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "23-5-0-7",
+      players: [
+        { name:"d4nk", min:404, caps:67, hold:3979, prevent:1554, returns:297, oscar:35.2, dscar:2, tscar:37.2 },
+        { name:"inthesomeday", min:404, caps:71, hold:4232, prevent:1690, returns:269, oscar:41.5, dscar:-7, tscar:34.4 },
+        { name:"DAD.", min:354, caps:26, hold:1957, prevent:4338, returns:424, oscar:0.9, dscar:24.5, tscar:25.4 },
+        { name:"Xile", min:404, caps:26, hold:1854, prevent:5488, returns:470, oscar:-3.3, dscar:27.2, tscar:23.9 }
+      ]
+    },
+    {
+      season: "S29", league: "MLTP",
+      franchise: "The Land Before Timers", record: "15-7-3-10",
+      players: [
+        { name:"Wanye", min:410, caps:66, hold:4315, prevent:1412, returns:334, oscar:38.9, dscar:1.3, tscar:40.2 },
+        { name:"200 Cacti", min:360, caps:54, hold:3510, prevent:1058, returns:249, oscar:26.2, dscar:-3.8, tscar:22.4 },
+        { name:"KaIeb", min:410, caps:17, hold:920, prevent:5706, returns:499, oscar:-17.5, dscar:34.5, tscar:17 },
+        { name:"aaron", min:410, caps:21, hold:2096, prevent:4635, returns:420, oscar:-3.5, dscar:18.8, tscar:15.3 }
+      ]
+    },
+    {
+      season: "S30", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "24-0-0-11",
+      players: [
+        { name:"CarrotCake", min:510, caps:85, hold:4822, prevent:2285, returns:503, oscar:40.6, dscar:12.7, tscar:53.3 },
+        { name:"Messi", min:510, caps:103, hold:6011, prevent:2092, returns:353, oscar:57.1, dscar:-12.2, tscar:44.9 },
+        { name:"TopG", min:460, caps:32, hold:2030, prevent:6111, returns:555, oscar:-8.7, dscar:36.1, tscar:27.4 },
+        { name:"waterwheel", min:510, caps:42, hold:2434, prevent:7031, returns:560, oscar:-5.6, dscar:32.2, tscar:26.6 }
+      ]
+    },
+    {
+      season: "S31", league: "MLTP",
+      franchise: "The Holy Seehawks", record: "16-5-1-13",
+      players: [
+        { name:"fender", min:385, caps:42, hold:2576, prevent:4423, returns:441, oscar:12.3, dscar:26.2, tscar:38.5 },
+        { name:"magnolia", min:535, caps:78, hold:5673, prevent:1831, returns:356, oscar:49.1, dscar:-11.9, tscar:37.1 },
+        { name:"Poeticalto", min:535, caps:25, hold:1940, prevent:7065, returns:633, oscar:-13.2, dscar:40.8, tscar:27.7 },
+        { name:"Gleg", min:535, caps:55, hold:4573, prevent:2752, returns:445, oscar:24.5, dscar:1.6, tscar:26.1 }
+      ]
+    },
+    {
+      season: "S32", league: "MLTP",
+      franchise: "Holdin' Gate Warriors", record: "6-2-2-25",
+      players: [
+        { name:"Curry", min:350, caps:12, hold:1586, prevent:4540, returns:427, oscar:-5.8, dscar:26.4, tscar:20.6 },
+        { name:"DAD.", min:300, caps:14, hold:1923, prevent:2220, returns:241, oscar:2.4, dscar:3.7, tscar:6.2 },
+        { name:"vic", min:190, caps:12, hold:1515, prevent:557, returns:116, oscar:7.3, dscar:-2.3, tscar:5.1 },
+        { name:"Nut Rage", min:248, caps:25, hold:1613, prevent:766, returns:171, oscar:7.6, dscar:-3.4, tscar:4.2 }
+      ]
+    },
+    {
+      season: "S33", league: "MLTP",
+      franchise: "The Land Before Timers", record: "7-4-1-23",
+      players: [
+        { name:"fender", min:348, caps:74, hold:4071, prevent:1037, returns:207, oscar:37.9, dscar:-14, tscar:23.9 },
+        { name:"kelvin", min:350, caps:22, hold:1346, prevent:5052, returns:531, oscar:-10.6, dscar:37.4, tscar:26.7 },
+        { name:"ft", min:350, caps:53, hold:3611, prevent:1027, returns:213, oscar:24.9, dscar:-13.9, tscar:11 },
+        { name:"deku", min:310, caps:11, hold:1018, prevent:4536, returns:330, oscar:-15.5, dscar:14.4, tscar:-1.2 }
+      ]
+    },
+    {
+      season: "S35", league: "MLTP",
+      franchise: "The Land Before Timers", record: "20-6-0-9",
+      players: [
+        { name:"Alphachurro", min:430, caps:66, hold:4694, prevent:2050, returns:364, oscar:39.2, dscar:1, tscar:40.2 },
+        { name:"waterwheel", min:430, caps:83, hold:4304, prevent:1900, returns:228, oscar:42.4, dscar:-19.1, tscar:23.3 },
+        { name:"DAD.", min:430, caps:37, hold:2148, prevent:5795, returns:586, oscar:-0.6, dscar:42.2, tscar:41.6 },
+        { name:"NameLEss", min:430, caps:22, hold:1582, prevent:6452, returns:581, oscar:-13.7, dscar:44.6, tscar:30.9 }
+      ]
+    },
+    {
+      season: "S36", league: "MLTP",
+      franchise: "The Land Before Timers", record: "14-3-2-16",
+      players: [
+        { name:"jig", min:450, caps:89, hold:5356, prevent:1454, returns:280, oscar:56.8, dscar:-13.8, tscar:43 },
+        { name:"king krule", min:300, caps:33, hold:2457, prevent:919, returns:177, oscar:14.5, dscar:-7.3, tscar:7.2 },
+        { name:"Russ", min:300, caps:17, hold:1127, prevent:4433, returns:422, oscar:-7.7, dscar:34.7, tscar:27 },
+        { name:"DudeMcGuy", min:450, caps:14, hold:1839, prevent:7091, returns:565, oscar:-15, dscar:39.3, tscar:24.3 }
+      ]
+    },
+    {
+      season: "S37", league: "MLTP",
+      franchise: "The Land Before Timers", record: "17-3-1-14",
+      players: [
+        { name:"MarcusYallow", min:470, caps:74, hold:4749, prevent:1770, returns:365, oscar:38.3, dscar:-7.7, tscar:30.6 },
+        { name:"Messi", min:380, caps:65, hold:4213, prevent:1131, returns:232, oscar:38.9, dscar:-14.2, tscar:24.7 },
+        { name:"phreak", min:480, caps:27, hold:1360, prevent:7254, returns:672, oscar:-17.9, dscar:55.4, tscar:37.5 },
+        { name:"ASAP", min:480, caps:27, hold:2777, prevent:6648, returns:589, oscar:-3.5, dscar:29.8, tscar:26.3 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "Cardio Crips", record: "10-2-0-13",
+      players: [
+        { name:"Mileena", min:308, caps:32, hold:2155, prevent:3188, returns:379, oscar:9.4, dscar:24, tscar:33.4 },
+        { name:"Shikari", min:250, caps:25, hold:2179, prevent:1063, returns:187, oscar:11.7, dscar:3, tscar:14.6 },
+        { name:"Russ", min:310, caps:14, hold:1495, prevent:4046, returns:365, oscar:-7.9, dscar:21.6, tscar:13.7 },
+        { name:"Magnolia", min:270, caps:32, hold:2419, prevent:1114, returns:157, oscar:15.1, dscar:-10.6, tscar:4.6 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "Chasevictim", record: "9-1-2-13",
+      players: [
+        { name:"BOTDON'TLIE", min:250, caps:11, hold:1347, prevent:3786, returns:356, oscar:-4.4, dscar:29.6, tscar:25.1 },
+        { name:"Messi", min:200, caps:30, hold:2225, prevent:768, returns:141, oscar:19.3, dscar:-5.8, tscar:13.4 },
+        { name:"BallSaget", min:250, caps:40, hold:2693, prevent:857, returns:142, oscar:22.7, dscar:-12.6, tscar:10.1 },
+        { name:"Mr awesome:)", min:250, caps:9, hold:414, prevent:4418, returns:297, oscar:-16, dscar:19.7, tscar:3.7 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "FWO", record: "5-3-3-14",
+      players: [
+        { name:"Suchit", min:250, caps:17, hold:1390, prevent:2980, returns:289, oscar:-1.5, dscar:14.1, tscar:12.6 },
+        { name:"rina", min:200, caps:33, hold:2267, prevent:511, returns:115, oscar:19.8, dscar:-8.5, tscar:11.3 },
+        { name:"MarcusYallow", min:150, caps:21, hold:1663, prevent:612, returns:107, oscar:11, dscar:-5.6, tscar:5.4 },
+        { name:"NameLEss", min:150, caps:4, hold:562, prevent:2423, returns:210, oscar:-6.4, dscar:18, tscar:11.6 },
+        { name:"Cheetosrule", min:150, caps:7, hold:729, prevent:1417, returns:159, oscar:-3.1, dscar:6.9, tscar:3.8 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "Heart of the Hold", record: "15-1-1-8",
+      players: [
+        { name:"OuchMyBalls", min:370, caps:66, hold:4381, prevent:1403, returns:246, oscar:40.3, dscar:-10.2, tscar:30.1 },
+        { name:"d0pe", min:370, caps:72, hold:3725, prevent:1497, returns:256, oscar:36.5, dscar:-7.1, tscar:29.4 },
+        { name:"realtea", min:370, caps:27, hold:1620, prevent:5855, returns:451, oscar:-5.1, dscar:31.4, tscar:26.3 },
+        { name:"Prime", min:370, caps:18, hold:1510, prevent:5334, returns:434, oscar:-10.5, dscar:23.3, tscar:12.8 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "Secure, Contain, Prevent", record: "16-1-1-7",
+      players: [
+        { name:"DT", min:310, caps:62, hold:3535, prevent:1366, returns:210, oscar:39.4, dscar:-7, tscar:32.4 },
+        { name:"bbb", min:310, caps:19, hold:1193, prevent:5242, returns:364, oscar:-5, dscar:27.3, tscar:22.3 },
+        { name:"dodsfall", min:310, caps:20, hold:1359, prevent:4934, returns:401, oscar:-6, dscar:27, tscar:21 },
+        { name:"kk", min:260, caps:41, hold:2043, prevent:1069, returns:137, oscar:14.1, dscar:-10.6, tscar:3.5 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "Snipe Hunt", record: "10-6-0-9",
+      players: [
+        { name:"meowza", min:300, caps:31, hold:2907, prevent:2834, returns:292, oscar:17.9, dscar:13.7, tscar:31.6 },
+        { name:"Curry", min:300, caps:25, hold:1278, prevent:4540, returns:331, oscar:-4.7, dscar:18.2, tscar:13.6 },
+        { name:"fm", min:300, caps:23, hold:2011, prevent:2662, returns:286, oscar:4.2, dscar:7.8, tscar:12.1 },
+        { name:"ASAP", min:300, caps:28, hold:3076, prevent:1235, returns:252, oscar:20.1, dscar:-9.1, tscar:11.1 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "The Baseball Scene from Twilight", record: "11-1-2-11",
+      players: [
+        { name:"fender", min:360, caps:38, hold:2729, prevent:4128, returns:385, oscar:10.4, dscar:15.2, tscar:25.6 },
+        { name:"joy.", min:360, caps:20, hold:1438, prevent:5354, returns:499, oscar:-11.5, dscar:33, tscar:21.5 },
+        { name:"mex", min:360, caps:43, hold:3021, prevent:1705, returns:320, oscar:19, dscar:-0.4, tscar:18.7 },
+        { name:"1deag", min:360, caps:46, hold:3417, prevent:1251, returns:251, oscar:19.7, dscar:-6.2, tscar:13.5 }
+      ]
+    },
+    {
+      season: "S38", league: "MLTP",
+      franchise: "The Land Before Timers", record: "9-0-6-10",
+      players: [
+        { name:"jig", min:430, caps:89, hold:5131, prevent:1608, returns:273, oscar:55.1, dscar:-19.2, tscar:35.9 },
+        { name:"Ty", min:430, caps:48, hold:3195, prevent:2005, returns:323, oscar:16.9, dscar:6.1, tscar:23.1 },
+        { name:"button", min:420, caps:24, hold:1630, prevent:6310, returns:557, oscar:-8.7, dscar:42.5, tscar:33.8 },
+        { name:"Arbybear", min:380, caps:16, hold:1406, prevent:5134, returns:451, oscar:-13.4, dscar:27.5, tscar:14.1 }
+      ]
+    },
+    {
+      season: "S39", league: "MLTP",
+      franchise: "Secure, Contain, Prevent", record: "8-4-1-17",
+      players: [
+        { name:"meowza", min:300, caps:33, hold:2397, prevent:3652, returns:319, oscar:11, dscar:13.6, tscar:24.6 },
+        { name:"fm", min:250, caps:17, hold:850, prevent:3475, returns:369, oscar:-6.5, dscar:28.3, tscar:21.9 },
+        { name:"fender", min:300, caps:57, hold:3422, prevent:958, returns:202, oscar:31.6, dscar:-13.5, tscar:18 },
+        { name:"omni", min:300, caps:31, hold:2165, prevent:1564, returns:204, oscar:7.1, dscar:-6.7, tscar:0.4 }
+      ]
+    },
+    {
+      season: "S39", league: "MLTP",
+      franchise: "The Land Before Timers", record: "22-1-2-5",
+      players: [
+        { name:"CarrotCake", min:300, caps:41, hold:1504, prevent:4657, returns:437, oscar:6.6, dscar:33.1, tscar:39.7 },
+        { name:"mactheroni", min:300, caps:66, hold:2620, prevent:1172, returns:220, oscar:26, dscar:-4.9, tscar:21.1 },
+        { name:"Irony", min:300, caps:50, hold:2915, prevent:1901, returns:202, oscar:22.9, dscar:-4.4, tscar:18.5 },
+        { name:"Xx360NoSwagx", min:300, caps:18, hold:1091, prevent:4972, returns:397, oscar:-6.3, dscar:26, tscar:19.7 }
+      ]
+    }
+  ];
+
+  // Roster shape: 2 Offense, 2 Defense, 1 5th Ball (5th Ball holds either).
+  // Picks are NOT tied to a slot ahead of time \u2014 each drafted player is
+  // assigned afterward to whichever matching slot is still open, with the
+  // 5th Ball slot as overflow once both dedicated slots for that position are full.
+  const POS_LABEL = { O:'Offense', D:'Defense', FLEX:'5th Ball', BOTH:'Offense or Defense' };
+  const BOARD_SLOTS = [
+    { type:'O',    idx:0, label:'Offense' },
+    { type:'O',    idx:1, label:'Offense' },
+    { type:'D',    idx:0, label:'Defense' },
+    { type:'D',    idx:1, label:'Defense' },
+    { type:'FLEX', idx:0, label:'5th Ball' }
+  ];
+
+  const ROUNDS = BOARD_SLOTS.length;
+  const TOTAL_GAMES = 30;
+  const CURVE_CENTER = 130;
+  const CURVE_STEEPNESS = 22;
+  const PLATE_H = 88;
+  const SPIN_CYCLES = 3;
+  const TOTAL_FRANCHISE_REROLLS = 2; // same season, different franchise
+  const TOTAL_SEASON_REROLLS = 2;    // same franchise, different season
+
+  // ---------------------------------------------------------------
+  // STATE
+  // ---------------------------------------------------------------
+  let usedPool = new Set();
+  let roster = []; // { poolIndex, player, pos, slotType, slotIndex }
+  let slots = { O:[null,null], D:[null,null], FLEX:[null] }; // assigned picks
+  let franchiseRerollsLeft = TOTAL_FRANCHISE_REROLLS;
+  let seasonRerollsLeft = TOTAL_SEASON_REROLLS;
+  let currentSpinIndex = null;
+  let spinToken = 0;
+
+  // ---------------------------------------------------------------
+  // ELEMENTS
+  // ---------------------------------------------------------------
+  const boardTrack = document.getElementById('boardTrack');
+  const draftPanel = document.getElementById('draftPanel');
+  const results = document.getElementById('results');
+
+  // ---------------------------------------------------------------
+  // HELPERS
+  // ---------------------------------------------------------------
+  function getPos(player){
+    if (Math.abs(player.oscar - player.dscar) < 5) return 'BOTH';
+    return player.oscar >= player.dscar ? 'O' : 'D';
+  }
+
+  // Where would a player of this position land right now?
+  // Returns 'O', 'D', 'FLEX', or null if no slot can take them.
+  // 'BOTH' players can fill an Offense or Defense slot before falling
+  // back to the 5th Ball \u2014 they're equally comfortable either way.
+  function previewSlot(pos){
+    if (pos === 'BOTH'){
+      if (slots.O.some(s => s === null)) return 'O';
+      if (slots.D.some(s => s === null)) return 'D';
+      if (slots.FLEX.some(s => s === null)) return 'FLEX';
+      return null;
+    }
+    if (slots[pos].some(s => s === null)) return pos;
+    if (slots.FLEX.some(s => s === null)) return 'FLEX';
+    return null;
+  }
+
+  // All slot types this player could currently be drafted into right now.
+  // O/D players can go to their natural slot and/or the 5th Ball, if
+  // either is open \u2014 both are offered as separate choices. BOTH
+  // players can additionally go to either side. The 5th Ball is always
+  // offered as an option when it's open, even if the natural slot is too.
+  function availableDests(pos){
+    const opts = [];
+    if ((pos === 'O' || pos === 'BOTH') && slots.O.some(s => s === null)) opts.push('O');
+    if ((pos === 'D' || pos === 'BOTH') && slots.D.some(s => s === null)) opts.push('D');
+    if (slots.FLEX.some(s => s === null)) opts.push('FLEX');
+    return opts;
+  }
+
+  function fillSlot(dest, pick){
+    const slotIndex = slots[dest].findIndex(s => s === null);
+    pick.slotType = dest;
+    pick.slotIndex = slotIndex;
+    slots[dest][slotIndex] = pick;
+  }
+
+  function openCounts(){
+    return {
+      O: slots.O.filter(s => s === null).length,
+      D: slots.D.filter(s => s === null).length,
+      FLEX: slots.FLEX.filter(s => s === null).length
+    };
+  }
+
+  // Names already on the roster \u2014 the same real player can show up in
+  // multiple team-seasons, but can only be drafted once.
+  function draftedNames(){
+    return new Set(roster.map(r => r.player.name));
+  }
+
+  // Does this entry have at least one player who is both not already
+  // drafted (by name) and has an open slot for their position?
+  function entryHasPickable(entry){
+    const taken = draftedNames();
+    return entry.players.some(p => !taken.has(p.name) && previewSlot(getPos(p)) !== null);
+  }
+
+  function pickSpinIndex(exclude){
+    const avail = [];
+    for (let i=0; i<POOL.length; i++){
+      if (!usedPool.has(i) && i !== exclude) avail.push(i);
+    }
+    if (avail.length === 0){
+      for (let i=0; i<POOL.length; i++){ if (!usedPool.has(i)) avail.push(i); }
+    }
+    const playable = avail.filter(i => entryHasPickable(POOL[i]));
+    const pool = playable.length > 0 ? playable : avail;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  // Other entries from the same season (different franchise), not yet used.
+  function sameSeasonOptions(idx){
+    const season = POOL[idx].season;
+    const out = [];
+    for (let i=0; i<POOL.length; i++){
+      if (i !== idx && POOL[i].season === season && !usedPool.has(i)) out.push(i);
+    }
+    const playable = out.filter(i => entryHasPickable(POOL[i]));
+    return playable.length > 0 ? playable : out;
+  }
+
+  // Other entries from the same franchise (different season), not yet used.
+  function sameFranchiseOptions(idx){
+    const fr = POOL[idx].franchise;
+    const out = [];
+    for (let i=0; i<POOL.length; i++){
+      if (i !== idx && POOL[i].franchise === fr && !usedPool.has(i)) out.push(i);
+    }
+    const playable = out.filter(i => entryHasPickable(POOL[i]));
+    return playable.length > 0 ? playable : out;
+  }
+
+  function pickFrom(options, fallback){
+    if (options.length === 0) return fallback;
+    return options[Math.floor(Math.random() * options.length)];
+  }
+
+  // ---------------------------------------------------------------
+  // BOARD RENDER
+  // ---------------------------------------------------------------
+  function renderBoard(){
+    boardTrack.innerHTML = '';
+    BOARD_SLOTS.forEach((cell, i) => {
+      const card = document.createElement('div');
+      card.className = 'slot-card';
+      const openTagClass = cell.type === 'O' ? 'off' : (cell.type === 'D' ? 'def' : 'flex');
+      const openTagText = cell.type === 'O' ? 'OFF' : (cell.type === 'D' ? 'DEF' : '5TH BALL');
+      const pick = slots[cell.type][cell.idx];
+      const label = cell.type === 'FLEX' ? cell.label : (cell.label + ' ' + (cell.idx + 1));
+
+      if (pick){
+        const entry = POOL[pick.poolIndex];
+        const pickTagClass = pick.pos === 'O' ? 'off' : (pick.pos === 'D' ? 'def' : 'both');
+        const pickTagText = pick.pos === 'O' ? 'OFF' : (pick.pos === 'D' ? 'DEF' : 'BOTH');
+        card.classList.add('is-done');
+        card.innerHTML = `
+          <div>
+            <div class="slot-num">
+              <span>${label}</span>
+              <span class="pos-tag ${pickTagClass}">${pickTagText}</span>
+            </div>
+            <div class="slot-round">Filled</div>
+          </div>
+          <div class="slot-pick">
+            <span class="name">${pick.player.name}</span>
+            ${entry.season} \u00b7 ${entry.franchise} \u2014 TSCAR ${pick.player.tscar.toFixed(1)}
+          </div>`;
+      } else {
+        card.classList.add('is-pending');
+        card.innerHTML = `
+          <div>
+            <div class="slot-num">
+              <span>${label}</span>
+              <span class="pos-tag ${openTagClass}">${openTagText}</span>
+            </div>
+            <div class="slot-round">Open</div>
+          </div>
+          <div class="slot-pick">Waiting for a pick</div>`;
+      }
+      boardTrack.appendChild(card);
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // DRAFT PANEL RENDER
+  // ---------------------------------------------------------------
+  function renderDraftPanel(opts){
+    opts = opts || {};
+
+    if (roster.length >= ROUNDS){
+      draftPanel.innerHTML = `
+        <div class="panel-head">
+          <p class="round-label">Roster locked</p>
+          <h2>2 Offense &middot; 2 Defense &middot; 1 5th Ball</h2>
+          <p class="panel-sub">Time to run the season.</p>
+        </div>
+        <button class="btn primary draft" id="simulateBtn">Simulate the 30-game season</button>
+      `;
+      document.getElementById('simulateBtn').addEventListener('click', runSimulation);
+      return;
+    }
+
+    const pickNum = roster.length + 1;
+    const entry = POOL[currentSpinIndex];
+    const open = openCounts();
+
+    const canRerollFranchise = franchiseRerollsLeft > 0 && sameSeasonOptions(currentSpinIndex).length > 0;
+    const canRerollSeason = seasonRerollsLeft > 0 && sameFranchiseOptions(currentSpinIndex).length > 0;
+
+    const openParts = [];
+    if (open.O > 0) openParts.push(`<span class="pos-tag off">OFF \u00d7${open.O}</span>`);
+    if (open.D > 0) openParts.push(`<span class="pos-tag def">DEF \u00d7${open.D}</span>`);
+    if (open.FLEX > 0) openParts.push(`<span class="pos-tag flex">5TH BALL \u00d7${open.FLEX}</span>`);
+
+    draftPanel.innerHTML = `
+      <div class="panel-head">
+        <p class="round-label">
+          <span>Pick ${pickNum} / ${ROUNDS}</span>
+          ${openParts.join(' ')}
+        </p>
+        <h2>On the clock</h2>
+        <p class="panel-sub">Draft anyone from this roster &mdash; your pick fills whichever open slot matches their position (5th Ball takes the overflow).</p>
+      </div>
+      <div class="slot-machine">
+        <div class="reel">
+          <p class="reel-label">Season ${opts.lock==='season' ? '<span class="locked">locked</span>' : ''}</p>
+          <div class="slot-window">
+            <div class="slot-track" id="seasonTrack"></div>
+            <div class="frame"></div>
+          </div>
+        </div>
+        <div class="reel">
+          <p class="reel-label">Franchise ${opts.lock==='franchise' ? '<span class="locked">locked</span>' : ''}</p>
+          <div class="slot-window">
+            <div class="slot-track" id="teamTrack"></div>
+            <div class="frame"></div>
+          </div>
+        </div>
+      </div>
+      <div class="player-grid" id="playerGrid"></div>
+      <div class="skip-row">
+        <button class="btn ghost" id="rerollFranchiseBtn" ${canRerollFranchise?'':'disabled'}>
+          Reroll franchise <span class="badge">${franchiseRerollsLeft}</span>
+        </button>
+        <button class="btn ghost" id="rerollSeasonBtn" ${canRerollSeason?'':'disabled'}>
+          Reroll season <span class="badge">${seasonRerollsLeft}</span>
+        </button>
+      </div>
+    `;
+
+    spinReels(entry, opts.lock || null, () => renderPlayerGrid(entry));
+
+    document.getElementById('rerollFranchiseBtn').addEventListener('click', () => {
+      if (franchiseRerollsLeft <= 0) return;
+      const options = sameSeasonOptions(currentSpinIndex);
+      if (options.length === 0) return;
+      franchiseRerollsLeft -= 1;
+      currentSpinIndex = pickFrom(options, currentSpinIndex);
+      renderDraftPanel({ lock: 'season' });
+    });
+
+    document.getElementById('rerollSeasonBtn').addEventListener('click', () => {
+      if (seasonRerollsLeft <= 0) return;
+      const options = sameFranchiseOptions(currentSpinIndex);
+      if (options.length === 0) return;
+      seasonRerollsLeft -= 1;
+      currentSpinIndex = pickFrom(options, currentSpinIndex);
+      renderDraftPanel({ lock: 'franchise' });
+    });
+
+    renderBoard();
+  }
+
+  function renderPlayerGrid(entry){
+    const grid = document.getElementById('playerGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const taken = draftedNames();
+
+    const decorated = entry.players.map(player => {
+      const pos = getPos(player);
+      const dupe = taken.has(player.name);
+      const dests = dupe ? [] : availableDests(pos);
+      return { player, pos, dests, dupe };
+    });
+    decorated.sort((a,b) => {
+      const aOk = a.dests.length > 0;
+      const bOk = b.dests.length > 0;
+      if (aOk === bOk) return 0;
+      return aOk ? -1 : 1;
+    });
+
+    decorated.forEach(({ player, pos, dests, dupe }) => {
+      const eligible = dests.length > 0;
+      const card = document.createElement('div');
+      card.className = 'player-card' + (eligible ? '' : ' ineligible');
+      const tscarClass = player.tscar < 0 ? 'tscar neg' : 'tscar';
+      const nameClass = 'pname' + (dupe ? ' drafted-out' : '');
+
+      // The badge always shows what KIND of player this is (Offense,
+      // Defense, or a flexible Both), regardless of where they'd land.
+      // DRAFTED/FULL override it when the player can't be picked.
+      let badgeClass, badgeText, actionHtml;
+      if (dupe){
+        badgeClass = 'full';
+        badgeText = 'DRAFTED';
+      } else if (!eligible){
+        badgeClass = 'full';
+        badgeText = 'FULL';
+      } else if (pos === 'O'){
+        badgeClass = 'off'; badgeText = 'OFF';
+      } else if (pos === 'D'){
+        badgeClass = 'def'; badgeText = 'DEF';
+      } else {
+        badgeClass = 'both'; badgeText = 'BOTH';
+      }
+
+      // The action area shows one button per available destination \u2014
+      // a player's natural slot(s) AND the 5th Ball are each offered
+      // separately whenever they're open, so the person can choose.
+      if (dupe){
+        actionHtml = `<button class="btn draft" disabled>Already on your roster</button>`;
+      } else if (!eligible){
+        actionHtml = `<button class="btn draft" disabled>No open slot for ${POS_LABEL[pos]}</button>`;
+      } else if (dests.length === 1){
+        const dest = dests[0];
+        actionHtml = `<button class="btn draft" data-dest="${dest}">Draft ${player.name} \u2192 ${POS_LABEL[dest]}</button>`;
+      } else {
+        actionHtml = `
+          <div class="draft-choice">
+            ${dests.map(d => `<button class="btn draft" data-dest="${d}">${POS_LABEL[d]}</button>`).join('')}
+          </div>`;
+      }
+
+      card.innerHTML = `
+        <div class="pname-row">
+          <div>
+            <div class="${nameClass}">${player.name}</div>
+            <div class="pteam">${entry.franchise} \u00b7 ${entry.season} ${entry.league} \u00b7 ${entry.record}</div>
+          </div>
+          <div class="pname-right">
+            <span class="pos-tag ${badgeClass}">${badgeText}</span>
+            <span class="pmin">${player.min} min</span>
+          </div>
+        </div>
+        <div class="stat-line">
+          <div><span>Caps</span><b>${player.caps}</b></div>
+          <div><span>Prevent</span><b>${player.prevent}</b></div>
+          <div><span>Hold</span><b>${player.hold}</b></div>
+          <div><span>Returns</span><b>${player.returns}</b></div>
+          <div><span>OSCAR</span><b>${player.oscar.toFixed(1)}</b></div>
+          <div><span>DSCAR</span><b>${player.dscar.toFixed(1)}</b></div>
+          <div class="${tscarClass}"><span>TSCAR</span><b>${player.tscar.toFixed(1)}</b></div>
+          <div class="${tscarClass}"><span>TEff</span><b>${(player.tscar / player.min * 10).toFixed(2)}</b></div>
+        </div>
+        ${actionHtml}
+      `;
+      card.querySelectorAll('.btn.draft[data-dest]').forEach(btn => {
+        btn.addEventListener('click', () => draftPlayer(player, pos, btn.dataset.dest));
+      });
+      grid.appendChild(card);
+    });
+  }
+
+  function draftPlayer(player, pos, dest){
+    if (!slots[dest] || !slots[dest].some(s => s === null)) return;
+    const pick = { poolIndex: currentSpinIndex, player, pos };
+    fillSlot(dest, pick);
+    usedPool.add(currentSpinIndex);
+    roster.push(pick);
+    renderBoard();
+    if (roster.length < ROUNDS){
+      currentSpinIndex = pickSpinIndex(null);
+    }
+    renderDraftPanel();
+  }
+
+  // ---------------------------------------------------------------
+  // SLOT MACHINE ANIMATION
+  // lock: null (both reels spin), 'season' (season reel locked/static),
+  // 'franchise' (franchise reel locked/static)
+  // ---------------------------------------------------------------
+  function spinReels(entry, lock, onDone){
+    const seasonTrack = document.getElementById('seasonTrack');
+    const teamTrack = document.getElementById('teamTrack');
+    if (!seasonTrack || !teamTrack) return;
+
+    const myToken = ++spinToken;
+
+    const seq = [];
+    for (let c=0; c<SPIN_CYCLES; c++){
+      for (let i=0; i<POOL.length; i++) seq.push(i);
+    }
+    seq.push(currentSpinIndex); // landing plate
+
+    function setupTrack(track, spins, plateHTML){
+      if (spins){
+        track.innerHTML = seq.map(i => plateHTML(POOL[i])).join('');
+      } else {
+        track.innerHTML = plateHTML(entry);
+      }
+      track.style.transition = 'none';
+      track.style.transform = 'translateY(0px)';
+      // force reflow
+      // eslint-disable-next-line no-unused-expressions
+      track.offsetHeight;
+    }
+
+    const seasonSpins = lock !== 'season';
+    const teamSpins = lock !== 'franchise';
+
+    setupTrack(seasonTrack, seasonSpins, seasonPlateHTML);
+    setupTrack(teamTrack, teamSpins, teamPlateHTML);
+
+    requestAnimationFrame(() => {
+      if (myToken !== spinToken) return;
+      const targetY = -(seq.length - 1) * PLATE_H;
+      if (seasonSpins){
+        seasonTrack.style.transition = 'transform 1.5s cubic-bezier(.13,.7,.18,1)';
+        seasonTrack.style.transform = `translateY(${targetY}px)`;
+      }
+      if (teamSpins){
+        teamTrack.style.transition = 'transform 1.5s cubic-bezier(.13,.7,.18,1)';
+        teamTrack.style.transform = `translateY(${targetY}px)`;
+      }
+    });
+
+    setTimeout(() => {
+      if (myToken !== spinToken) return;
+      if (typeof onDone === 'function') onDone();
+    }, 1600);
+  }
+
+  function seasonPlateHTML(entry){
+    return `
+      <div class="slot-plate season-plate">
+        <div class="season-num">${entry.season}</div>
+        <div class="season-league">${entry.league}</div>
+      </div>
+    `;
+  }
+
+  function teamPlateHTML(entry){
+    return `
+      <div class="slot-plate team-plate">
+        <div class="team-name">${entry.franchise}</div>
+        <div class="team-record">${entry.record}</div>
+      </div>
+    `;
+  }
+
+  // ---------------------------------------------------------------
+  // SIMULATION
+  // ---------------------------------------------------------------
+  function winProbFromRating(rating){
+    const z = (rating - CURVE_CENTER) / CURVE_STEEPNESS;
+    return 1 / (1 + Math.exp(-z));
+  }
+
+  function runSimulation(){
+    const totalTscar = roster.reduce((sum, r) => sum + r.player.tscar, 0);
+    const totals = {
+      caps: roster.reduce((s,r)=>s+r.player.caps,0),
+      hold: roster.reduce((s,r)=>s+r.player.hold,0),
+      prevent: roster.reduce((s,r)=>s+r.player.prevent,0),
+      returns: roster.reduce((s,r)=>s+r.player.returns,0)
+    };
+    const baseProb = winProbFromRating(totalTscar);
+
+    results.hidden = false;
+    results.innerHTML = `
+      <h2>Season Simulation</h2>
+      <p class="ratingline">
+        Roster Rating (\u03A3 TSCAR): <b>${totalTscar.toFixed(1)}</b>
+        &nbsp;\u00b7&nbsp; Caps ${totals.caps} \u00b7 Hold ${totals.hold} \u00b7 Prevent ${totals.prevent} \u00b7 Returns ${totals.returns}
+        &nbsp;\u00b7&nbsp; Per-game win odds: <b>${Math.round(baseProb*100)}%</b>
+      </p>
+      <div class="ticker" id="ticker"></div>
+      <div class="final-record" id="finalRecord">&mdash;</div>
+      <p class="flavor" id="flavor"></p>
+      <button class="btn primary" id="resetBtn">Draft a new roster</button>
+    `;
+    results.scrollIntoView({ behavior:'smooth', block:'start' });
+
+    const ticker = document.getElementById('ticker');
+    for (let i=0;i<TOTAL_GAMES;i++){
+      const cell = document.createElement('div');
+      cell.className = 'g';
+      ticker.appendChild(cell);
+    }
+
+    const cells = ticker.querySelectorAll('.g');
+    let wins = 0, losses = 0, idx = 0;
+
+    function step(){
+      if (idx >= TOTAL_GAMES){
+        finish();
+        return;
+      }
+      const jitter = (Math.random() - 0.5) * 0.10;
+      let p = baseProb + jitter;
+      p = Math.min(0.99, Math.max(0.01, p));
+      const win = Math.random() < p;
+      cells[idx].classList.add(win ? 'win' : 'loss');
+      if (win) wins++; else losses++;
+      idx++;
+      setTimeout(step, 70);
+    }
+    step();
+
+    function finish(){
+      const recordEl = document.getElementById('finalRecord');
+      const flavorEl = document.getElementById('flavor');
+      recordEl.textContent = `${wins}-${losses}`;
+      if (wins === TOTAL_GAMES){
+        recordEl.classList.add('perfect');
+        flavorEl.textContent = `Perfect season. ${TOTAL_GAMES}\u20130. Every spin paid off.`;
+      } else if (wins >= 27){
+        flavorEl.textContent = "So close to perfect \u2014 one bounce away from history.";
+      } else if (wins >= 22){
+        flavorEl.textContent = "Playoff-caliber. This roster wins it all most years.";
+      } else if (wins >= 15){
+        flavorEl.textContent = "A .500 grind. Somewhere, a deficiency is showing.";
+      } else if (wins >= 8){
+        flavorEl.textContent = "Rebuilding year. Hope for better spins next time.";
+      } else {
+        flavorEl.textContent = "0-fer territory. Maybe try a different set of spins.";
+      }
+    }
+
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+  }
+
+  function resetGame(){
+    usedPool = new Set();
+    roster = [];
+    slots = { O:[null,null], D:[null,null], FLEX:[null] };
+    franchiseRerollsLeft = TOTAL_FRANCHISE_REROLLS;
+    seasonRerollsLeft = TOTAL_SEASON_REROLLS;
+    currentSpinIndex = pickSpinIndex(null);
+    results.hidden = true;
+    results.innerHTML = '';
+    renderBoard();
+    renderDraftPanel();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ---------------------------------------------------------------
+  // INIT
+  // ---------------------------------------------------------------
+  currentSpinIndex = pickSpinIndex(null);
+  renderBoard();
+  renderDraftPanel();
+
+})();
+</script>
+</body>
+</html>
