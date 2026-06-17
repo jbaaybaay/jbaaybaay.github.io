@@ -95,14 +95,14 @@
     color: var(--cap-blue-dark);
     margin: 0 0 10px;
   }
-  .hero h1{
+  .hero h1, .landing h1{
     font-family: var(--display);
     font-weight: 900;
-    font-size: clamp(56px, 12vw, 108px);
+    font-size: clamp(36px, 8vw, 72px);
     line-height: 0.92;
     letter-spacing: 0.01em;
     margin: 0;
-    background: linear-gradient(120deg, var(--ink) 30%, var(--cap-blue) 70%, var(--tag-red) 100%);
+    background: linear-gradient(120deg, var(--ink) 30%, var(--cap-blue) 65%, var(--tag-red) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -620,7 +620,7 @@
       color: #fff;
     }
     .eyebrow{ color: rgba(255,255,255,0.55); margin-bottom: 4px; }
-    .hero h1{
+    .hero h1, .landing h1{
       font-size: 42px;
       background: linear-gradient(120deg, #fff 30%, #93b8f8 70%, #f87171 100%);
       -webkit-background-clip: text;
@@ -937,6 +937,155 @@
     .sim-opp-rating{ display: none; }
   }
 
+
+  /* ---- Gold shimmer for special players ---- */
+  .shimmer-gold {
+    background: linear-gradient(
+      90deg,
+      var(--flag-gold) 0%,
+      #fff5c0 35%,
+      var(--flag-gold) 60%,
+      #c8941a 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shimmer-gold 2.2s linear infinite;
+  }
+  @keyframes shimmer-gold {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .shimmer-gold { animation: none; background-position: 0 center; }
+  }
+
+
+  /* ---- Cursor tooltip for JBB/JOBA draft ---- */
+  .cursor-toast {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #1a1308;
+    background: var(--flag-gold);
+    border-radius: 6px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(0px);
+    transition: opacity .15s ease, transform .15s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+  }
+  .cursor-toast.show {
+    opacity: 1;
+    transform: translateY(-6px);
+  }
+
+
+  /* ---- Mode switcher ---- */
+  .hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .hero-top-left { flex: 1; min-width: 0; }
+  .mode-btn-group {
+    display: flex;
+    flex: none;
+    margin-top: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .mode-btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border: none;
+    background: var(--panel);
+    color: var(--muted);
+    padding: 10px 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background .15s, color .15s;
+    position: relative;
+  }
+  .mode-btn + .mode-btn {
+    border-left: 1px solid var(--line);
+  }
+  .mode-btn:hover:not(.pressed) { color: var(--chalk); background: var(--panel-2); }
+  .mode-btn.pressed {
+    background: var(--flag-gold);
+    color: #1a1308;
+    cursor: default;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.18);
+  }
+  .bk-mode .stat-line { display: none; }
+  @media (max-width: 640px){
+    .mode-btn { font-size: 11px; padding: 8px 14px; }
+  }
+
+
+  /* ---- Landing screen ---- */
+  .landing{
+    padding: 40px 0 32px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 28px;
+  }
+  .landing.hidden{ display: none; }
+  .draft-team-btn{
+    margin-top: 28px;
+    font-size: 16px;
+    padding: 14px 40px;
+    border-radius: 10px;
+    letter-spacing: .06em;
+  }
+  @media (max-width: 640px){
+    .landing{ padding: 24px 16px 20px; }
+    .draft-team-btn{ width: 100%; font-size: 15px; padding: 14px; }
+  }
+
+
+  /* ---- Draft panel wrap ---- */
+  .draft-panel-wrap{ display: flex; flex-direction: column; margin-bottom: 28px; }
+  .draft-panel-wrap .draft-panel{ margin-bottom: 0; }
+
+  /* ---- Panel mode row ---- */
+  .panel-mode-row{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 14px;
+  }
+  .panel-mode-row .mode-btn-group{ margin-top: 0; }
+  @media (max-width: 640px){
+    .panel-mode-row .mode-btn{ font-size: 10px; padding: 6px 10px; }
+  }
+
+
+  /* ---- Landing action row ---- */
+  .landing-action-row{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .landing-action-row .mode-btn-group{ margin-top: 0; }
+  .landing-action-row .draft-team-btn{ margin-top: 0; }
+  @media (max-width: 640px){
+    .landing-action-row{ flex-direction: column; align-items: stretch; }
+    .landing-action-row .mode-btn-group{ align-self: flex-start; }
+  }
+
 </style>
 </head>
 <body>
@@ -948,24 +1097,46 @@
 </div>
 <main class="page">
 
-  <header class="hero">
-    <p class="eyebrow">All-History Draft</p>
-    <h1>ROAD TO THE SUPER</h1>
-    <p class="tagline">
-      Spin for an MLTP Season and Franchise, then draft your favorite player for your squad.
-      Fill out your team with 2 Offenders, 2 Defenders, and a 5th Ball.
-      Simulate your MLTP season to see if you win the <strong>Super</strong>!
-    </p>
-    <div class="chip-row">
-      <span class="chip">2 OFF · 2 DEF · 1 5TH BALL</span>
-      <span class="chip">2 reroll franchise</span>
-      <span class="chip">2 reroll season</span>
-      <span class="chip">213 team-seasons · 29 MLTP seasons</span>
-      <span class="chip">7-game season + playoffs</span>
-    </div>
-  </header>
+  <section id="landingScreen" class="landing">
+    <div class="landing-inner">
+      <div class="hero-top">
+        <div class="hero-top-left">
+          <p class="eyebrow">All-History Draft</p>
+          <h1>ROAD TO THE SUPER</h1>
+        </div>
 
-  <section class="draft-panel" id="draftPanel"></section>
+      </div>
+      <p class="tagline">
+        Spin for an MLTP Season and Franchise, then draft your favorite player for your squad.
+        Fill out your team with 2 Offenders, 2 Defenders, and a 5th Ball.
+        Simulate your MLTP season to see if you win the <strong>Super</strong>!
+      </p>
+      <div class="chip-row">
+        <span class="chip">2 OFF · 2 DEF · 1 5TH BALL</span>
+        <span class="chip">2 reroll franchise</span>
+        <span class="chip">2 reroll season</span>
+        <span class="chip">220 team-seasons · 30 MLTP seasons</span>
+        <span class="chip">7-game season + playoffs</span>
+      </div>
+      <div class="landing-action-row">
+        <div class="mode-btn-group" id="landingModeBtns">
+          <button class="mode-btn" id="landingBtnRegular">Regular</button>
+          <button class="mode-btn" id="landingBtnBK">Ball Knower</button>
+        </div>
+        <button class="btn primary draft-team-btn" id="draftTeamBtn">Draft a Team</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="draft-panel-wrap">
+    <div class="panel-mode-row">
+      <div class="mode-btn-group">
+        <button class="mode-btn" id="modeBtnRegular">Regular</button>
+        <button class="mode-btn" id="modeBtnBK">Ball Knower</button>
+      </div>
+    </div>
+    <section class="draft-panel" id="draftPanel"></section>
+  </div>
 
   <section class="board" aria-label="Your roster">
     <p class="board-label">Your roster</p>
@@ -3107,12 +3278,88 @@
     },
     {
       season: "S28", league: "MLTP",
+      franchise: "A Spheries of Unfortunate Prevents", record: "11-4-5-15",
+      players: [
+        { name:"Luv(sic)", min:350, caps:8, hold:1212, prevent:4351, returns:444, oscar:-13, dscar:34.8, tscar:21.8 },
+        { name:"aaron", min:350, caps:25, hold:1682, prevent:3830, returns:340, oscar:0.9, dscar:19.8, tscar:20.7 },
+        { name:"d0pe", min:350, caps:53, hold:4878, prevent:924, returns:220, oscar:44.6, dscar:-8.9, tscar:35.7 },
+        { name:"jazzz", min:300, caps:18, hold:1696, prevent:1466, returns:185, oscar:-1, dscar:-3.9, tscar:-4.9 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Converse Ballstars", record: "19-1-2-13",
+      players: [
+        { name:"CoolCat", min:400, caps:63, hold:3897, prevent:1137, returns:227, oscar:31.9, dscar:-15, tscar:16.9 },
+        { name:"FM", min:400, caps:16, hold:1502, prevent:5672, returns:530, oscar:-10.2, dscar:40.9, tscar:30.7 },
+        { name:"Gleg", min:400, caps:63, hold:3839, prevent:1173, returns:238, oscar:32.2, dscar:-11.7, tscar:20.5 },
+        { name:"Homie", min:400, caps:15, hold:995, prevent:6681, returns:466, oscar:-15.9, dscar:36.9, tscar:21 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Harlem Globebotters", record: "13-4-0-18",
+      players: [
+        { name:"fender", min:400, caps:69, hold:4785, prevent:1081, returns:254, oscar:45.4, dscar:-5.8, tscar:39.6 },
+        { name:"sonder", min:400, caps:22, hold:2078, prevent:4878, returns:467, oscar:-2.7, dscar:28.8, tscar:26 },
+        { name:"perc angle", min:300, caps:15, hold:1047, prevent:3966, returns:265, oscar:-6.7, dscar:13.2, tscar:6.5 },
+        { name:"titan", min:300, caps:30, hold:2632, prevent:1029, returns:229, oscar:16.5, dscar:-4.9, tscar:11.6 },
+        { name:"Sadness", min:100, caps:13, hold:1006, prevent:363, returns:45, oscar:6.5, dscar:-3.9, tscar:2.5 },
+        { name:"Yuri", min:100, caps:5, hold:476, prevent:1479, returns:88, oscar:-1.8, dscar:3.6, tscar:1.9 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
       franchise: "Holdin' Gate Warriors", record: "23-5-0-7",
       players: [
         { name:"d4nk", min:404, caps:67, hold:3979, prevent:1554, returns:297, oscar:35.2, dscar:2, tscar:37.2 },
         { name:"inthesomeday", min:404, caps:71, hold:4232, prevent:1690, returns:269, oscar:41.5, dscar:-7, tscar:34.4 },
         { name:"DAD.", min:354, caps:26, hold:1957, prevent:4338, returns:424, oscar:0.9, dscar:24.5, tscar:25.4 },
         { name:"Xile", min:404, caps:26, hold:1854, prevent:5488, returns:470, oscar:-3.3, dscar:27.2, tscar:23.9 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Knights of the Round Tile", record: "5-0-4-26",
+      players: [
+        { name:"BALLDON'TLIE", min:350, caps:13, hold:1092, prevent:4562, returns:446, oscar:-10.5, dscar:33, tscar:22.5 },
+        { name:"Ty", min:350, caps:33, hold:2928, prevent:1471, returns:231, oscar:13.9, dscar:-5.3, tscar:8.6 },
+        { name:"DiNgBaT", min:250, caps:4, hold:808, prevent:2945, returns:258, oscar:-12.4, dscar:9.6, tscar:-2.8 },
+        { name:"Sadness", min:240, caps:25, hold:2031, prevent:877, returns:140, oscar:10.7, dscar:-7.6, tscar:3.2 },
+        { name:"perc angle", min:100, caps:5, hold:426, prevent:1379, returns:87, oscar:-2.8, dscar:1.9, tscar:-0.9 },
+        { name:"titan", min:90, caps:10, hold:697, prevent:253, returns:75, oscar:4.9, dscar:-1.3, tscar:3.7 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Los Ankeles Breakers", record: "14-3-2-16",
+      players: [
+        { name:"Alphachurro", min:514, caps:39, hold:2324, prevent:7679, returns:519, oscar:-2.2, dscar:31.1, tscar:28.9 },
+        { name:"BoldRoller", min:514, caps:76, hold:5872, prevent:1692, returns:333, oscar:49.6, dscar:-18, tscar:31.7 },
+        { name:"ASAP", min:514, caps:37, hold:2839, prevent:8007, returns:627, oscar:1.9, dscar:39.1, tscar:41 },
+        { name:"grumpy", min:454, caps:58, hold:3994, prevent:1726, returns:366, oscar:25.9, dscar:2.5, tscar:28.4 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Respawnsiballs", record: "16-2-5-12",
+      players: [
+        { name:"NameLEss", min:500, caps:14, hold:1353, prevent:8134, returns:638, oscar:-24.3, dscar:47.7, tscar:23.4 },
+        { name:"goD", min:500, caps:50, hold:3728, prevent:5715, returns:593, oscar:17.9, dscar:36.4, tscar:54.3 },
+        { name:"flaccid trip", min:400, caps:55, hold:3613, prevent:1130, returns:229, oscar:27.2, dscar:-10.5, tscar:16.7 },
+        { name:"Corbeh", min:350, caps:54, hold:4439, prevent:992, returns:214, oscar:34.4, dscar:-8.1, tscar:26.3 },
+        { name:"doG", min:100, caps:7, hold:472, prevent:569, returns:76, oscar:-0.5, dscar:2.8, tscar:2.3 },
+        { name:"DUMPTRUCKASS", min:100, caps:5, hold:322, prevent:1187, returns:83, oscar:-3.8, dscar:3.1, tscar:-0.8 }
+      ]
+    },
+    {
+      season: "S28", league: "MLTP",
+      franchise: "Summoning Alt", record: "19-1-2-13",
+      players: [
+        { name:"2P1S", min:410, caps:70, hold:3394, prevent:1150, returns:272, oscar:27.3, dscar:-1.2, tscar:26.1 },
+        { name:"NEB.", min:410, caps:26, hold:2053, prevent:4550, returns:483, oscar:-1.5, dscar:32, tscar:30.5 },
+        { name:"Pandora", min:410, caps:17, hold:1114, prevent:5266, returns:486, oscar:-16.7, dscar:30.2, tscar:13.5 },
+        { name:"Messi", min:410, caps:57, hold:4373, prevent:1267, returns:237, oscar:32.3, dscar:-10.9, tscar:21.5 }
       ]
     },
     {
@@ -3325,6 +3572,7 @@
   // ---------------------------------------------------------------
   // STATE
   // ---------------------------------------------------------------
+  let gameMode = 'regular'; // 'regular' | 'ballknower'
   let usedPool = new Set();
   let roster = []; // { poolIndex, player, pos, slotType, slotIndex }
   let slots = { O:[null,null], D:[null,null], FLEX:[null] }; // assigned picks
@@ -3583,7 +3831,7 @@
             <div class="slot-round">Filled</div>
           </div>
           <div class="slot-pick">
-            <span class="name">${pick.player.name}</span>
+            <span class="name${['JBB','JOBA'].includes(pick.player.name) ? ' shimmer-gold' : ''}">${pick.player.name}</span>
             ${entry.season} \u00b7 ${entry.franchise} \u2014 Sim TSCAR ${pick.simTscar.toFixed(1)}
           </div>`;
       } else {
@@ -3617,7 +3865,12 @@
         </div>
         <button class="btn primary draft" id="simulateBtn">Simulate the MLTP season</button>
       `;
-      document.getElementById('simulateBtn').addEventListener('click', runSimulation);
+      const simulateBtn = document.getElementById('simulateBtn');
+      simulateBtn.addEventListener('click', () => {
+        simulateBtn.disabled = true;
+        simulateBtn.textContent = 'Simulating…';
+        runSimulation();
+      });
       renderMobileProgress();
       applyMobileRosterState();
       return;
@@ -3722,7 +3975,8 @@
       const card = document.createElement('div');
       card.className = 'player-card' + (eligible ? '' : ' ineligible');
       const tscarClass = player.tscar < 0 ? 'tscar neg' : 'tscar';
-      const nameClass = 'pname' + (dupe ? ' drafted-out' : '');
+      const isSpecial = ['JBB','JOBA'].includes(player.name);
+      const nameClass = 'pname' + (dupe ? ' drafted-out' : '') + (isSpecial ? ' shimmer-gold' : '');
 
       // The badge always shows what KIND of player this is (Offense,
       // Defense, or a flexible Both), regardless of where they'd land.
@@ -3789,11 +4043,32 @@
     });
   }
 
+  // Cursor toast element
+  const cursorToast = document.createElement('div');
+  cursorToast.className = 'cursor-toast';
+  cursorToast.textContent = 'Thanks for picking me man';
+  document.body.appendChild(cursorToast);
+  let _toastX = 0, _toastY = 0, _toastTimer = null;
+  document.addEventListener('mousemove', e => {
+    _toastX = e.clientX;
+    _toastY = e.clientY;
+    cursorToast.style.left = (_toastX + 14) + 'px';
+    cursorToast.style.top  = (_toastY - 28) + 'px';
+  });
+  function showCursorToast(){
+    cursorToast.style.left = (_toastX + 14) + 'px';
+    cursorToast.style.top  = (_toastY - 28) + 'px';
+    cursorToast.classList.add('show');
+    if (_toastTimer) clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => cursorToast.classList.remove('show'), 2200);
+  }
+
   function draftPlayer(player, pos, dest){
     if (!slots[dest] || !slots[dest].some(s => s === null)) return;
     const isFlex = dest === 'FLEX';
     const simTscar = normalizedTscar(player, isFlex, true);
     const pick = { poolIndex: currentSpinIndex, player, pos, simTscar };
+    if (['JBB','JOBA'].includes(player.name)) showCursorToast();
     fillSlot(dest, pick);
     usedPool.add(currentSpinIndex);
     roster.push(pick);
@@ -3843,7 +4118,10 @@
 
     requestAnimationFrame(() => {
       if (myToken !== spinToken) return;
-      const targetY = -(seq.length - 1) * PLATE_H;
+      // Measure actual rendered plate height so mobile (64px) and desktop (88px) both land correctly
+      const firstPlate = (seasonSpins ? seasonTrack : teamTrack).querySelector('.slot-plate');
+      const plateH = firstPlate ? firstPlate.offsetHeight : PLATE_H;
+      const targetY = -(seq.length - 1) * plateH;
       if (seasonSpins){
         seasonTrack.style.transition = 'transform 1.5s cubic-bezier(.13,.7,.18,1)';
         seasonTrack.style.transform = `translateY(${targetY}px)`;
@@ -4185,6 +4463,30 @@
     playNextGame();
   }
 
+  // Landing screen — defined here so resetGame can call showDraft()
+  const landingScreen = document.getElementById('landingScreen');
+  const draftTeamBtn  = document.getElementById('draftTeamBtn');
+  const boardSection  = document.querySelector('.board');
+
+  function showDraft(){
+    if (landingScreen) landingScreen.classList.add('hidden');
+    if (boardSection)  boardSection.style.display = '';
+    if (draftPanel)    draftPanel.style.display = '';
+  }
+
+  // Hide board + draft panel until "Draft a Team" is clicked
+  if (boardSection) boardSection.style.display = 'none';
+  if (draftPanel)   draftPanel.style.display = 'none';
+
+  if (draftTeamBtn){
+    draftTeamBtn.addEventListener('click', () => {
+      showDraft();
+      currentSpinIndex = pickSpinIndex(null);
+      renderBoard();
+      renderDraftPanel();
+    });
+  }
+
   function resetGame(){
     usedPool = new Set();
     roster = [];
@@ -4194,6 +4496,8 @@
     currentSpinIndex = pickSpinIndex(null);
     results.hidden = true;
     results.innerHTML = '';
+    // Go straight to draft — no landing screen
+    showDraft();
     renderBoard();
     renderDraftPanel();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4202,9 +4506,69 @@
   // ---------------------------------------------------------------
   // INIT
   // ---------------------------------------------------------------
-  currentSpinIndex = pickSpinIndex(null);
-  renderBoard();
-  renderDraftPanel();
+  // Mode toggle — two-button group
+  const modeBtnRegular = document.getElementById('modeBtnRegular');
+  const modeBtnBK      = document.getElementById('modeBtnBK');
+  function applyMode(){
+    const isBK = gameMode === 'ballknower';
+    if (modeBtnRegular) modeBtnRegular.classList.toggle('pressed', !isBK);
+    if (modeBtnBK)      modeBtnBK.classList.toggle('pressed',  isBK);
+    const main = document.querySelector('main');
+    if (main) isBK ? main.classList.add('bk-mode') : main.classList.remove('bk-mode');
+    // Keep landing mirror buttons in sync if they exist
+    const lbr = document.getElementById('landingBtnRegular');
+    const lbbk = document.getElementById('landingBtnBK');
+    if (lbr)  lbr.classList.toggle('pressed', !isBK);
+    if (lbbk) lbbk.classList.toggle('pressed',  isBK);
+  }
+  if (modeBtnRegular) {
+    modeBtnRegular.addEventListener('click', () => {
+      if (gameMode === 'regular') return;
+      gameMode = 'regular';
+      applyMode();
+      resetGame();
+    });
+  }
+  if (modeBtnBK) {
+    modeBtnBK.addEventListener('click', () => {
+      if (gameMode === 'ballknower') return;
+      gameMode = 'ballknower';
+      applyMode();
+      resetGame();
+    });
+  }
+
+  // Landing screen mirror buttons — same logic, also sync visual state
+  const landingBtnRegular = document.getElementById('landingBtnRegular');
+  const landingBtnBK      = document.getElementById('landingBtnBK');
+  function applyLandingMode(){
+    const isBK = gameMode === 'ballknower';
+    if (landingBtnRegular) landingBtnRegular.classList.toggle('pressed', !isBK);
+    if (landingBtnBK)      landingBtnBK.classList.toggle('pressed',  isBK);
+  }
+  if (landingBtnRegular){
+    landingBtnRegular.addEventListener('click', () => {
+      if (gameMode === 'regular') return;
+      gameMode = 'regular';
+      applyMode();
+      applyLandingMode();
+    });
+  }
+  if (landingBtnBK){
+    landingBtnBK.addEventListener('click', () => {
+      if (gameMode === 'ballknower') return;
+      gameMode = 'ballknower';
+      applyMode();
+      applyLandingMode();
+    });
+  }
+
+  applyMode(); // set initial pressed state
+  applyLandingMode();
+
+  // (landing screen setup moved before resetGame)
+
+  // Board and panel rendered on Draft button click, not on load
 
 })();
 </script>
