@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ROAD TO THE SUPER — MLTP All-History Draft</title>
+<title>Road To The Super — MLTP All-History Draft</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -619,10 +619,10 @@
       background: var(--navy-2);
       color: #fff;
     }
-    .eyebrow{ color: rgba(255,255,255,0.55); margin-bottom: 4px; }
+    .eyebrow {color: var(--cap-blue-dark); margin-bottom: 4px;}
     .hero h1, .landing h1{
       font-size: 42px;
-      background: linear-gradient(120deg, #fff 30%, #93b8f8 70%, #f87171 100%);
+      background: linear-gradient(120deg, var(--ink) 30%, var(--cap-blue) 65%, var(--tag-red) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -1147,18 +1147,16 @@
 
   <footer class="footer">
     <p>
-      Every roster spot reproduces a real season line from
+      Every selectable player references a real season statline from
       <a href="https://tagpro-reference.com" target="_blank" rel="noopener">TagPro Reference</a>
       (Caps, Hold, Prevent, Returns, OSCAR, DSCAR, TSCAR), spanning 29 MLTP seasons
-      (S10&ndash;S25, S26&ndash;S33, S35&ndash;S39) across 94 franchises.
-      Holdin' Gate Warriors leads with 15 seasons, followed by Red Hot Chili Poppers
-      and The Land Before Timers (8 each), The Holy Seehawks and ALL CAPS (7 each),
-      and Boostin Dynamo and Centra of Attention (6 each). A player is tagged
-      <strong>Offense</strong> when their OSCAR is higher than their DSCAR for that
+      (Post S10) across 94 franchises. After each spin, the user may reroll the Franchise or Season (2x each). Each drafted player is assigned a simulated TSCAR, 
+      normalized to 300 minutes. 5th Balls provide half the TSCAR as a starting player. Historical teams are simulated,
+      with stronger teams occuring in the playoffs.
+      A player is tagged <strong>Offense</strong> when their OSCAR is higher than their DSCAR for a selected season
       season, <strong>Defense</strong> when DSCAR is higher, and
-      <strong>Both</strong> when the gap is under 5 points. ALL CAPS is an
-      independent fan project, not affiliated with or endorsed by TagPro League
-      or TagPro Reference.
+      <strong>Both</strong> when the gap is under 5 points. Any bugs? Contact Baay. Road to the Super is an
+      independent project, not affiliated with TagPro.
     </p>
   </footer>
 
@@ -4439,16 +4437,16 @@
         headline = `${regW}–${regL}`;
         flavor = regW === 0
           ? "Winless. The draft gods were not kind."
-          : "Under .500. Didn't make it out of the regular season.";
+          : "Under .500. We're losing to LagProne.";
       } else if (won){
         headline = "Champions";
-        flavor = "7 games. 3 rounds. Every pick pulled its weight.";
+        flavor = "Immortalized your name in the fender sheet.";
       } else {
         headline = `Lost in ${eliminatedIn}`;
         const flavors = {
-          Quarterfinal: "Bounced in the first round. The roster had more to give.",
-          Semifinal: "One win away from the final. So close.",
-          Final: "Runner-up. The best season ends one game short."
+          Quarterfinal: "Bounced in the first round. Could've been worse.",
+          Semifinal: "One win away from the final. You guys are gonna be spooky next season.",
+          Final: "Runner-up. A strong season ends one game short."
         };
         flavor = flavors[eliminatedIn] || "Eliminated.";
       }
