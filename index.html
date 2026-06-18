@@ -1329,6 +1329,129 @@
     }
   }
 
+
+  /* ---- Score submission ---- */
+  .score-submit{
+    margin-top: 20px;
+    padding: 16px;
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-align: left;
+  }
+  .score-submit .submit-label{
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .score-submit .submit-row{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .score-submit input{
+    flex: 1;
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: var(--panel);
+    color: var(--ink);
+    outline: none;
+  }
+  .score-submit input:focus{ border-color: var(--cap-blue); }
+  .score-submit .submit-msg{
+    font-family: var(--mono);
+    font-size: 11px;
+    margin-top: 8px;
+    color: var(--muted);
+  }
+  .score-submit .submit-msg.ok{ color: var(--gate-green); }
+  .score-submit .submit-msg.err{ color: var(--tag-red); }
+
+  /* ---- Leaderboard ---- */
+  .leaderboard{
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .lb-tabs{
+    display: flex;
+    gap: 0;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    width: fit-content;
+  }
+  .lb-tab{
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    background: var(--panel);
+    color: var(--muted);
+    border: none;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .lb-tab + .lb-tab{ border-left: 1px solid var(--line); }
+  .lb-tab.active{ background: var(--navy-2); color: #fff; }
+  .lb-title{
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  .lb-table{
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .lb-table th{
+    text-align: left;
+    padding: 6px 10px;
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  .lb-table th.num, .lb-table td.num{ text-align: right; }
+  .lb-table td{
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .lb-table tr:last-child td{ border-bottom: none; }
+  .lb-table tr:hover td{ background: rgba(37,99,235,0.04); }
+  .lb-table .lb-rank{ color: var(--muted); font-size: 11px; width: 28px; }
+  .lb-table .lb-name{ font-weight: 700; }
+  .lb-table .lb-result{ font-weight: 700; }
+  .lb-table .lb-result.champion{ color: var(--flag-gold); }
+  .lb-table .lb-result.finalist{ color: var(--gate-green); }
+  .lb-table .lb-result.semi{ color: var(--cap-blue-dark); }
+  .lb-table .lb-result.quarter{ color: var(--muted); }
+  .lb-table .lb-result.missed{ color: var(--tag-red); }
+  .lb-table .lb-tscar{ color: var(--gate-green-dark); font-weight: 700; }
+  .lb-loading{ font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 16px 0; }
+  .lb-empty{ font-family: var(--mono); font-size: 12px; color: var(--muted); padding: 16px 0; }
+
+  @media (max-width: 640px){
+    .score-submit .submit-row{ flex-direction: column; align-items: stretch; }
+    .lb-table th:nth-child(5), .lb-table td:nth-child(5){ display: none; }
+  }
+
 </style>
 </head>
 <body>
@@ -4259,6 +4382,119 @@
   // ---------------------------------------------------------------
   // BOARD RENDER
   // ---------------------------------------------------------------
+
+  // ---------------------------------------------------------------
+  // SUPABASE / LEADERBOARD
+  // ---------------------------------------------------------------
+  const SB_URL = 'https://sbecmzeotipddbcohlrc.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNiZWNtemVvdGlwZGRiY29obHJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE3MzMxOTgsImV4cCI6MjA5NzMwOTE5OH0.kfwa33-FpfRVabygyb7TwfoOV_FkcFdQEK7wcY2nw18';
+  const SB_TABLE = 'scores';
+
+  function sbHeaders(){
+    return {
+      'apikey': SB_KEY,
+      'Authorization': 'Bearer ' + SB_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal'
+    };
+  }
+
+  // Playoff result rank for sorting (lower = better)
+  function playoffRank(result){
+    if (result === 'Champion')        return 0;
+    if (result === 'Lost in Final')   return 1;
+    if (result === 'Lost in Semifinal') return 2;
+    if (result === 'Lost in Quarterfinal') return 3;
+    return 4; // Missed playoffs
+  }
+
+  async function submitScore(playerName, mode, regRecord, playoffResult, rosterTscar, picks){
+    const body = {
+      player_name: playerName,
+      mode: mode,
+      reg_record: regRecord,
+      playoff_result: playoffResult,
+      roster_tscar: Math.round(rosterTscar * 10) / 10,
+      picks: picks
+    };
+    const res = await fetch(SB_URL + '/rest/v1/' + SB_TABLE, {
+      method: 'POST',
+      headers: sbHeaders(),
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+  }
+
+  async function fetchLeaderboard(mode){
+    const res = await fetch(
+      SB_URL + '/rest/v1/' + SB_TABLE +
+      '?mode=eq.' + mode +
+      '&hidden=eq.false' +
+      '&order=roster_tscar.desc&limit=25',
+      { headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } }
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  function resultClass(result){
+    if (result === 'Champion') return 'champion';
+    if (result === 'Lost in Final') return 'finalist';
+    if (result === 'Lost in Semifinal') return 'semi';
+    if (result === 'Lost in Quarterfinal') return 'quarter';
+    return 'missed';
+  }
+
+  function renderLeaderboard(rows, container){
+    if (!rows.length){
+      container.innerHTML = '<p class="lb-empty">No scores yet — be the first!</p>';
+      return;
+    }
+    // Sort: playoff rank → reg wins → roster_tscar
+    rows.sort((a,b) => {
+      const pr = playoffRank(a.playoff_result) - playoffRank(b.playoff_result);
+      if (pr !== 0) return pr;
+      const aw = parseInt((a.reg_record||'0').split('-')[0]);
+      const bw = parseInt((b.reg_record||'0').split('-')[0]);
+      if (bw !== aw) return bw - aw;
+      return b.roster_tscar - a.roster_tscar;
+    });
+    container.innerHTML = `
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th class="lb-rank">#</th>
+            <th>Name</th>
+            <th>Result</th>
+            <th>Record</th>
+            <th class="num">TSCAR</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r,i) => `
+            <tr>
+              <td class="lb-rank num">${i+1}</td>
+              <td class="lb-name">${r.player_name || 'Anonymous'}</td>
+              <td class="lb-result ${resultClass(r.playoff_result)}">${r.playoff_result}</td>
+              <td>${r.reg_record}</td>
+              <td class="lb-tscar num">${(+r.roster_tscar).toFixed(1)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  async function loadLeaderboard(mode, container){
+    container.innerHTML = '<p class="lb-loading">Loading…</p>';
+    try {
+      const rows = await fetchLeaderboard(mode);
+      renderLeaderboard(rows, container);
+    } catch(e) {
+      container.innerHTML = '<p class="lb-empty">Could not load scores.</p>';
+    }
+  }
+
   // ---------------------------------------------------------------
   // MOBILE HELPERS
   // ---------------------------------------------------------------
@@ -5059,16 +5295,17 @@
     function showFinalScreen(won, eliminatedIn, regW, regL, myTscar){
       simFinal.hidden = false;
       simFinal.scrollIntoView({ behavior:'smooth', block:'nearest' });
-      let headline, flavor;
+      let headline, flavor, playoffResult;
       if (!eliminatedIn && !won){
-        // missed playoffs
         headline = `${regW}–${regL}`;
         flavor = regW === 0
           ? "Winless. The draft gods were not kind."
           : "Under .500. We're losing to LagProne.";
+        playoffResult = 'Missed playoffs';
       } else if (won){
         headline = "Champions";
         flavor = "Immortalized your name in the fender sheet.";
+        playoffResult = 'Champion';
       } else {
         headline = `Lost in ${eliminatedIn}`;
         const flavors = {
@@ -5077,13 +5314,87 @@
           Final: "Runner-up. A strong season ends one game short."
         };
         flavor = flavors[eliminatedIn] || "Eliminated.";
+        playoffResult = `Lost in ${eliminatedIn}`;
       }
+
+      const regRecord = `${regW}–${regL}`;
+      const picks = roster.map(r => ({
+        name: r.player.name,
+        season: POOL[r.poolIndex].season,
+        franchise: POOL[r.poolIndex].franchise,
+        simTscar: r.simTscar,
+        pos: r.pos
+      }));
+
       simFinal.innerHTML = `
         <div class="final-record ${won ? 'perfect' : ''}">${headline}</div>
         <p class="flavor">${flavor}</p>
         <button class="btn primary" id="resetBtn">Draft a new roster</button>
+
+        <div class="score-submit" id="scoreSubmit">
+          <p class="submit-label">Submit your score</p>
+          <div class="submit-row">
+            <input type="text" id="scoreNameInput" placeholder="Your name or tag…" maxlength="32">
+            <button class="btn ghost" id="scoreSubmitBtn">Submit</button>
+          </div>
+          <p class="submit-msg" id="submitMsg"></p>
+        </div>
+
+        <div class="leaderboard" id="leaderboard">
+          <p class="lb-title">Leaderboard</p>
+          <div class="lb-tabs">
+            <button class="lb-tab active" id="lbTabRegular">Regular</button>
+            <button class="lb-tab" id="lbTabBK">Ball Knower</button>
+          </div>
+          <div id="lbContent"></div>
+        </div>
       `;
+
       document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+      // Score submission
+      const submitBtn = document.getElementById('scoreSubmitBtn');
+      const nameInput = document.getElementById('scoreNameInput');
+      const submitMsg = document.getElementById('submitMsg');
+      submitBtn.addEventListener('click', async () => {
+        const name = nameInput.value.trim();
+        if (!name){ submitMsg.textContent = 'Please enter a name.'; submitMsg.className = 'submit-msg err'; return; }
+        submitBtn.disabled = true;
+        submitMsg.textContent = 'Submitting…';
+        submitMsg.className = 'submit-msg';
+        try {
+          await submitScore(name, gameMode, regRecord, playoffResult, myTscar, picks);
+          submitMsg.textContent = 'Score submitted!';
+          submitMsg.className = 'submit-msg ok';
+          document.getElementById('scoreSubmit').style.opacity = '0.6';
+          // Reload leaderboard to show new score
+          const activeLbMode = document.getElementById('lbTabBK').classList.contains('active') ? 'ballknower' : 'regular';
+          loadLeaderboard(activeLbMode, document.getElementById('lbContent'));
+        } catch(e) {
+          submitMsg.textContent = 'Could not submit. Try again.';
+          submitMsg.className = 'submit-msg err';
+          submitBtn.disabled = false;
+        }
+      });
+
+      // Leaderboard tabs
+      const lbContent = document.getElementById('lbContent');
+      const tabRegular = document.getElementById('lbTabRegular');
+      const tabBK      = document.getElementById('lbTabBK');
+      tabRegular.addEventListener('click', () => {
+        tabRegular.classList.add('active'); tabBK.classList.remove('active');
+        loadLeaderboard('regular', lbContent);
+      });
+      tabBK.addEventListener('click', () => {
+        tabBK.classList.add('active'); tabRegular.classList.remove('active');
+        loadLeaderboard('ballknower', lbContent);
+      });
+
+      // Load the leaderboard for current mode by default
+      if (tabBK && gameMode === 'ballknower'){
+        tabBK.classList.add('active'); tabRegular.classList.remove('active');
+      }
+      loadLeaderboard(gameMode, lbContent);
     }
 
     playNextGame();
