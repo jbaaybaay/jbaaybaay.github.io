@@ -5991,9 +5991,9 @@
         <button class="btn primary" id="resetBtn">Draft a new roster</button>
 
         <div class="score-submit" id="scoreSubmit">
-          <p class="submit-label">Submit your score</p>
+          <p class="submit-label">Submit your score — enter your tag</p>
           <div class="submit-row">
-            <input type="text" id="scoreNameInput" placeholder="Your name or tag…" maxlength="32">
+            <input type="text" id="scoreTagInput" placeholder="Your tag…" maxlength="32">
             <button class="btn ghost" id="scoreSubmitBtn">Submit</button>
           </div>
           <p class="submit-char-count" id="submitCharCount">0 / 32</p>
@@ -6014,25 +6014,25 @@
 
       // Score submission
       const submitBtn = document.getElementById('scoreSubmitBtn');
-      const nameInput = document.getElementById('scoreNameInput');
+      const tagInput = document.getElementById('scoreTagInput');
       const submitMsg = document.getElementById('submitMsg');
       const charCount = document.getElementById('submitCharCount');
-      if (nameInput && charCount){
-        nameInput.addEventListener('input', () => {
-          const len = nameInput.value.length;
+      if (tagInput && charCount){
+        tagInput.addEventListener('input', () => {
+          const len = tagInput.value.length;
           charCount.textContent = len + ' / 32';
           charCount.style.color = len > 32 ? 'var(--tag-red)' : len > 26 ? 'var(--flag-gold)' : 'var(--muted)';
         });
       }
       submitBtn.addEventListener('click', async () => {
-        const name = nameInput.value.trim();
-        if (!name){ submitMsg.textContent = 'Please enter a name.'; submitMsg.className = 'submit-msg err'; return; }
-        if (name.length > 32){ submitMsg.textContent = 'Name must be 32 characters or fewer.'; submitMsg.className = 'submit-msg err'; return; }
+        const tag = tagInput.value.trim();
+        if (!tag){ submitMsg.textContent = 'Please enter a tag.'; submitMsg.className = 'submit-msg err'; return; }
+        if (tag.length > 32){ submitMsg.textContent = 'Tag must be 32 characters or fewer.'; submitMsg.className = 'submit-msg err'; return; }
         submitBtn.disabled = true;
         submitMsg.textContent = 'Submitting…';
         submitMsg.className = 'submit-msg';
         try {
-          await submitScore(name, gameMode, regRecord, playoffResult, myTscar, picks);
+          await submitScore(tag, gameMode, regRecord, playoffResult, myTscar, picks);
           submitMsg.textContent = 'Score submitted!';
           submitMsg.className = 'submit-msg ok';
           document.getElementById('scoreSubmit').style.opacity = '0.6';
