@@ -400,7 +400,7 @@
   .player-card.ineligible{
     opacity: .45;
   }
-  .player-card.ineligible:hover{ border-color: var(--line); transform: none; box-shadow: none; }
+  .player-card.ineligible:hover{ border-color: var(--muted); transform: none; box-shadow: none; }
   .pname-row{
     display:flex;
     align-items: flex-start;
@@ -1420,14 +1420,17 @@
   }
   .lb-table th{
     text-align: left;
-    padding: 6px 10px;
+    padding: 7px 10px;
     font-size: 10px;
+    font-weight: 400;
     letter-spacing: .1em;
     text-transform: uppercase;
     color: var(--muted);
-    border-bottom: 1px solid var(--line);
+    border-bottom: 2px solid var(--line);
+    white-space: nowrap;
   }
   .lb-table th.num, .lb-table td.num{ text-align: right; }
+  .lb-table .lb-rank{ text-align: right; }
   .lb-table td{
     padding: 7px 10px;
     border-bottom: 1px solid var(--line);
@@ -1449,7 +1452,98 @@
 
   @media (max-width: 640px){
     .score-submit .submit-row{ flex-direction: column; align-items: stretch; }
-    .lb-table th:nth-child(5), .lb-table td:nth-child(5){ display: none; }
+  }
+
+
+  /* ---- Draft grade ---- */
+  .draft-grade{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .draft-grade .grade-label{ font-weight: 400; }
+  .draft-grade .grade-value{
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  @media (max-width: 640px){
+    .draft-grade .grade-value{ font-size: 24px; }
+  }
+
+
+  .submit-char-count{
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    text-align: right;
+    margin-top: 4px;
+  }
+
+
+  /* ---- Leaderboard roster tooltip ---- */
+  .lb-tooltip{
+    position: fixed;
+    z-index: 500;
+    background: var(--navy-2);
+    color: #fff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    pointer-events: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+    max-width: 260px;
+    opacity: 0;
+    transition: opacity .12s ease;
+  }
+  .lb-tooltip.visible{ opacity: 1; }
+  .lb-tooltip .tt-title{
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 8px;
+  }
+  .lb-tooltip .tt-pick{
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .lb-tooltip .tt-pick:last-child{ border-bottom: none; }
+  .lb-tooltip .tt-pick .tt-player{
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+  }
+  .lb-tooltip .tt-pick .tt-meta{
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+  }
+  .lb-tooltip .tt-pick .tt-tscar{
+    font-size: 10px;
+    color: var(--flag-gold);
+  }
+  tr[data-picks]:hover td{ background: rgba(37,99,235,0.08); cursor: default; }
+
+
+  /* ---- Build number ---- */
+  .build-version{
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--line);
+    text-align: right;
+    margin-top: 12px;
+    letter-spacing: .06em;
   }
 
 </style>
@@ -1550,6 +1644,7 @@
       independent project, not affiliated with TagPro.</p>
     </div>
   </footer>
+  <p class="build-version">v1.0.0</p>
 
 </main>
 
@@ -4790,14 +4885,15 @@
   // Names already on the roster \u2014 the same real player can show up in
   // multiple team-seasons, but can only be drafted once.
   function draftedNames(){
-    return new Set(roster.map(r => r.player.name));
+    // Key = name + season so same player from different seasons can be drafted
+    return new Set(roster.map(r => r.player.name + '|' + POOL[r.poolIndex].season));
   }
 
   // Does this entry have at least one player who is both not already
   // drafted (by name) and has an open slot for their position?
   function entryHasPickable(entry){
     const taken = draftedNames();
-    return entry.players.some(p => !taken.has(p.name) && previewSlot(getPos(p)) !== null);
+    return entry.players.some(p => !taken.has(p.name + '|' + entry.season) && previewSlot(getPos(p)) !== null);
   }
 
   function pickSpinIndex(exclude){
@@ -4941,6 +5037,17 @@
     return 'missed';
   }
 
+  // Shared tooltip element
+  let lbTooltipEl = null;
+  function getLbTooltip(){
+    if (!lbTooltipEl){
+      lbTooltipEl = document.createElement('div');
+      lbTooltipEl.className = 'lb-tooltip';
+      document.body.appendChild(lbTooltipEl);
+    }
+    return lbTooltipEl;
+  }
+
   function renderLeaderboard(rows, container){
     if (!rows.length){
       container.innerHTML = '<p class="lb-empty">No scores yet — be the first!</p>';
@@ -4959,7 +5066,7 @@
       <table class="lb-table">
         <thead>
           <tr>
-            <th class="lb-rank">#</th>
+            <th class="lb-rank num">#</th>
             <th>Name</th>
             <th>Result</th>
             <th>Record</th>
@@ -4967,18 +5074,54 @@
           </tr>
         </thead>
         <tbody>
-          ${rows.map((r,i) => `
-            <tr>
-              <td class="lb-rank num">${i+1}</td>
-              <td class="lb-name">${r.player_name || 'Anonymous'}</td>
-              <td class="lb-result ${resultClass(r.playoff_result)}">${r.playoff_result}</td>
-              <td>${r.reg_record}</td>
-              <td class="lb-tscar num">${(+r.roster_tscar).toFixed(1)}</td>
-            </tr>
-          `).join('')}
+          ${rows.map((r,i) => {
+            const picks = Array.isArray(r.picks) ? r.picks : [];
+            const picksJson = picks.length ? encodeURIComponent(JSON.stringify(picks)) : '';
+            return `
+              <tr ${picksJson ? `data-picks="${picksJson}"` : ''}>
+                <td class="lb-rank num">${i+1}</td>
+                <td class="lb-name">${r.player_name || 'Anonymous'}</td>
+                <td class="lb-result ${resultClass(r.playoff_result)}">${r.playoff_result}</td>
+                <td>${r.reg_record}</td>
+                <td class="lb-tscar num">${(+r.roster_tscar).toFixed(1)}</td>
+              </tr>`;
+          }).join('')}
         </tbody>
       </table>
     `;
+
+    // Wire up tooltip on rows with picks data
+    const tooltip = getLbTooltip();
+    container.querySelectorAll('tr[data-picks]').forEach(row => {
+      row.addEventListener('mouseenter', e => {
+        try {
+          const picks = JSON.parse(decodeURIComponent(row.dataset.picks));
+          const SLOT_LABEL = { O: 'Offense', D: 'Defense', FLEX: '5th Ball' };
+          tooltip.innerHTML = `
+            <div class="tt-title">Roster</div>
+            ${picks.map(p => `
+              <div class="tt-pick">
+                <span class="tt-player">${p.name}</span>
+                <span class="tt-meta">${p.season} · ${p.franchise} · ${SLOT_LABEL[p.pos] || p.pos}</span>
+                <span class="tt-tscar">Sim TSCAR ${(+p.simTscar).toFixed(1)}</span>
+              </div>
+            `).join('')}
+          `;
+          tooltip.classList.add('visible');
+          // Position below + right of cursor
+          const rect = row.getBoundingClientRect();
+          tooltip.style.top = (rect.bottom + 6) + 'px';
+          tooltip.style.left = Math.min(rect.left, window.innerWidth - 280) + 'px';
+        } catch(e) {}
+      });
+      row.addEventListener('mousemove', e => {
+        tooltip.style.top = (e.clientY + 14) + 'px';
+        tooltip.style.left = Math.min(e.clientX + 12, window.innerWidth - 280) + 'px';
+      });
+      row.addEventListener('mouseleave', () => {
+        tooltip.classList.remove('visible');
+      });
+    });
   }
 
   async function loadLeaderboard(mode, container){
@@ -4989,6 +5132,25 @@
     } catch(e) {
       container.innerHTML = '<p class="lb-empty">Could not load scores.</p>';
     }
+  }
+
+
+  // ---------------------------------------------------------------
+  // DRAFT GRADE
+  // ---------------------------------------------------------------
+  function getDraftGrade(tscar){
+    if (tscar >= 152) return { grade: 'A+', color: '#00843d' };
+    if (tscar >= 145) return { grade: 'A',  color: '#178a4a' };
+    if (tscar >= 138) return { grade: 'A-', color: '#2a9d6a' };
+    if (tscar >= 133) return { grade: 'B+', color: '#2563eb' };
+    if (tscar >= 128) return { grade: 'B',  color: '#2563eb' };
+    if (tscar >= 122) return { grade: 'B-', color: '#3b82f6' };
+    if (tscar >= 116) return { grade: 'C+', color: '#f59e0b' };
+    if (tscar >= 107) return { grade: 'C',  color: '#d97706' };
+    if (tscar >= 95)  return { grade: 'C-', color: '#b45309' };
+    if (tscar >= 80)  return { grade: 'D+', color: '#dc3530' };
+    if (tscar >= 65)  return { grade: 'D',  color: '#b91c1c' };
+    return               { grade: 'F',  color: '#7f1d1d' };
   }
 
   // ---------------------------------------------------------------
@@ -5178,7 +5340,7 @@
       <div class="slot-machine">
         <div class="reel">
           <div class="reel-top">
-            <p class="reel-label">Season ${opts.lock==='season' ? '<span class="locked">locked</span>' : ''}</p>
+            <p class="reel-label">Season</p>
             <button class="btn ghost reel-reroll mob-only" id="mobRerollSeasonBtn" ${canRerollSeason?'':'disabled'}>
               Reroll <span class="badge">${seasonRerollsLeft}</span>
             </button>
@@ -5190,7 +5352,7 @@
         </div>
         <div class="reel">
           <div class="reel-top">
-            <p class="reel-label">Franchise ${opts.lock==='franchise' ? '<span class="locked">locked</span>' : ''}</p>
+            <p class="reel-label">Franchise</p>
             <button class="btn ghost reel-reroll mob-only" id="mobRerollFranchiseBtn" ${canRerollFranchise?'':'disabled'}>
               Reroll <span class="badge">${franchiseRerollsLeft}</span>
             </button>
@@ -5267,7 +5429,7 @@
 
     const decorated = entry.players.map(player => {
       const pos = getPos(player);
-      const dupe = taken.has(player.name);
+      const dupe = taken.has(player.name + '|' + entry.season);
       const dests = dupe ? [] : availableDests(pos);
       return { player, pos, dests, dupe };
     });
@@ -5588,6 +5750,7 @@
       <div class="sim-header">
         <h2>Season Simulation</h2>
         <p class="ratingline">Your roster TSCAR: <b>${myTscar.toFixed(1)}</b></p>
+        ${(() => { const g = getDraftGrade(myTscar); return `<div class="draft-grade"><span class="grade-label">Draft Grade:</span><span class="grade-value" style="color:${g.color}">${g.grade}</span></div>`; })()}
       </div>
       <div class="sim-reg" id="simReg">
         <p class="sim-section-label">Regular Season</p>
@@ -5833,6 +5996,7 @@
             <input type="text" id="scoreNameInput" placeholder="Your name or tag…" maxlength="32">
             <button class="btn ghost" id="scoreSubmitBtn">Submit</button>
           </div>
+          <p class="submit-char-count" id="submitCharCount">0 / 32</p>
           <p class="submit-msg" id="submitMsg"></p>
         </div>
 
@@ -5852,9 +6016,18 @@
       const submitBtn = document.getElementById('scoreSubmitBtn');
       const nameInput = document.getElementById('scoreNameInput');
       const submitMsg = document.getElementById('submitMsg');
+      const charCount = document.getElementById('submitCharCount');
+      if (nameInput && charCount){
+        nameInput.addEventListener('input', () => {
+          const len = nameInput.value.length;
+          charCount.textContent = len + ' / 32';
+          charCount.style.color = len > 32 ? 'var(--tag-red)' : len > 26 ? 'var(--flag-gold)' : 'var(--muted)';
+        });
+      }
       submitBtn.addEventListener('click', async () => {
         const name = nameInput.value.trim();
         if (!name){ submitMsg.textContent = 'Please enter a name.'; submitMsg.className = 'submit-msg err'; return; }
+        if (name.length > 32){ submitMsg.textContent = 'Name must be 32 characters or fewer.'; submitMsg.className = 'submit-msg err'; return; }
         submitBtn.disabled = true;
         submitMsg.textContent = 'Submitting…';
         submitMsg.className = 'submit-msg';
