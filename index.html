@@ -1546,6 +1546,36 @@
     letter-spacing: .06em;
   }
 
+
+  /* ---- Landing leaderboard ---- */
+  .landing-right-btns{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  /* Desktop: LB button below action row */
+  .landing-lb-btn-desktop-wrap{
+    margin-top: 12px;
+  }
+  /* Mobile: LB button hidden in desktop wrap, shown inline */
+  .landing-lb-btn-mobile{ display: none; }
+  .landing-lb{
+    margin-top: 0;
+  }
+  .landing-lb .leaderboard{
+    margin-top: 16px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+    border-bottom: none;
+  }
+  @media (max-width: 640px){
+    .landing-right-btns{ flex-direction: row; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: nowrap; width: 100%; }
+    .landing-lb-btn-desktop-wrap{ display: none; }
+    .landing-lb-btn-mobile{ display: inline-flex; }
+    .landing-lb{ margin-top: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -1580,9 +1610,25 @@
       </div>
       <div class="landing-action-row">
         <button class="btn primary draft-team-btn" id="draftTeamBtn">Draft a Team</button>
-        <div class="mode-btn-group" id="landingModeBtns">
-          <button class="mode-btn" id="landingBtnRegular">Regular</button>
-          <button class="mode-btn" id="landingBtnBK">Ball Knower</button>
+        <div class="landing-right-btns">
+          <div class="mode-btn-group" id="landingModeBtns">
+            <button class="mode-btn" id="landingBtnRegular">Regular</button>
+            <button class="mode-btn" id="landingBtnBK">Ball Knower</button>
+          </div>
+          <div class="mode-btn-group landing-lb-btn-mobile"><button class="mode-btn" id="landingLbBtnMobile">Leaderboard</button></div>
+        </div>
+      </div>
+      <div class="landing-lb-btn-desktop-wrap">
+        <button class="btn ghost" id="landingLbBtn">Leaderboard</button>
+      </div>
+      <div class="landing-lb" id="landingLb" hidden>
+        <div class="leaderboard">
+          <p class="lb-title">Leaderboard</p>
+          <div class="lb-tabs">
+            <button class="lb-tab active" id="landingLbTabRegular">Regular</button>
+            <button class="lb-tab" id="landingLbTabBK">Ball Knower</button>
+          </div>
+          <div id="landingLbContent"></div>
         </div>
       </div>
     </div>
@@ -6082,6 +6128,14 @@
     const wrap = document.getElementById('draftPanelWrap');
     if (wrap) wrap.style.display = '';
     if (draftPanel) draftPanel.style.display = '';
+    // Hide landing leaderboard
+    const llb = document.getElementById('landingLb');
+    if (llb) llb.hidden = true;
+    const llbBtn = document.getElementById('landingLbBtn');
+    if (llbBtn) llbBtn.textContent = 'Leaderboard';
+    const llbBtnM = document.getElementById('landingLbBtnMobile');
+    if (llbBtnM) llbBtnM.textContent = 'Leaderboard';
+    landingLbLoaded = false;
   }
 
   // Hide board + draft panel until "Draft a Team" is clicked
@@ -6178,6 +6232,52 @@
   applyLandingMode();
 
   // (landing screen setup moved before resetGame)
+
+  // Landing leaderboard button
+  const landingLbBtn = document.getElementById('landingLbBtn');
+  const landingLb    = document.getElementById('landingLb');
+  const landingLbContent = document.getElementById('landingLbContent');
+  const landingLbTabRegular = document.getElementById('landingLbTabRegular');
+  const landingLbTabBK      = document.getElementById('landingLbTabBK');
+  let landingLbMode = 'regular';
+  let landingLbLoaded = false;
+
+  const landingLbBtnMobile = document.getElementById('landingLbBtnMobile');
+
+  function toggleLandingLb(){
+    const isHidden = landingLb.hidden;
+    landingLb.hidden = !isHidden;
+    const label = isHidden ? 'Hide Leaderboard' : 'Leaderboard';
+    if (landingLbBtn) landingLbBtn.textContent = label;
+    if (landingLbBtnMobile) landingLbBtnMobile.textContent = label;
+    if (isHidden && !landingLbLoaded){
+      loadLeaderboard(landingLbMode, landingLbContent);
+      landingLbLoaded = true;
+    }
+  }
+
+  if (landingLbBtn && landingLb){
+    landingLbBtn.addEventListener('click', toggleLandingLb);
+  }
+  if (landingLbBtnMobile && landingLb){
+    landingLbBtnMobile.addEventListener('click', toggleLandingLb);
+  }
+  if (landingLbTabRegular){
+    landingLbTabRegular.addEventListener('click', () => {
+      landingLbTabRegular.classList.add('active');
+      landingLbTabBK.classList.remove('active');
+      landingLbMode = 'regular';
+      loadLeaderboard('regular', landingLbContent);
+    });
+  }
+  if (landingLbTabBK){
+    landingLbTabBK.addEventListener('click', () => {
+      landingLbTabBK.classList.add('active');
+      landingLbTabRegular.classList.remove('active');
+      landingLbMode = 'ballknower';
+      loadLeaderboard('ballknower', landingLbContent);
+    });
+  }
 
   // Footer help tooltip (mobile)
   const footerHelpBtn      = document.getElementById('footerHelpBtn');
