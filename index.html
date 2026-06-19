@@ -5007,7 +5007,9 @@
       playoff_result: playoffResult,
       roster_tscar: Math.round(rosterTscar * 10) / 10,
       picks: picks,
-      hidden: false
+      hidden: false,
+      playoff_rank: playoffRank(playoffResult),
+      reg_wins: parseInt(regRecord.split('-')[0]) || 0
     };
     const res = await fetch(SB_URL + '/rest/v1/' + SB_TABLE, {
       method: 'POST',
@@ -5022,7 +5024,7 @@
       SB_URL + '/rest/v1/' + SB_TABLE +
       '?mode=eq.' + mode +
       '&hidden=eq.false' +
-      '&order=roster_tscar.desc&limit=25',
+      '&order=playoff_rank.asc.nullslast,reg_wins.desc.nullslast,roster_tscar.desc&limit=25',
       { headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY } }
     );
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -5976,7 +5978,7 @@
         playoffResult = `Lost in ${eliminatedIn}`;
       }
 
-      const regRecord = `${regW}–${regL}`;
+      const regRecord = `${regW}-${regL}`;
       const picks = roster.map(r => ({
         name: r.player.name,
         season: POOL[r.poolIndex].season,
